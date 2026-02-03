@@ -1,0 +1,699 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalashaya - Services & Orders</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Deep Ocean Theme Consistent with About/Contact */
+            --ocean-dark: #021B2E;
+            --ocean-mid: #034E84;
+            --ocean-light: #00C6FF;
+            --water-gradient: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+            --deep-gradient: linear-gradient(135deg, #021B2E 0%, #034E84 100%);
+            --text-muted: #a0aec0;
+            --card-glass: rgba(255, 255, 255, 0.75);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f0f9ff;
+            color: var(--ocean-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+        /* --- Bubbles Animation --- */
+        .bubbles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: 0; pointer-events: none;
+        }
+        .bubble {
+            position: absolute; bottom: -100px; background: rgba(0, 198, 255, 0.15);
+            border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
+            animation: rise 15s infinite ease-in;
+        }
+        @keyframes rise {
+            0% { bottom: -100px; transform: translateX(0) scale(0.5); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { bottom: 110vh; transform: translateX(50px) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            padding: 1.5rem 0; transition: all 0.4s ease; background: transparent;
+        }
+        .navbar.scrolled {
+            background: rgba(2, 27, 46, 0.95); backdrop-filter: blur(15px);
+            padding: 1rem 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand { font-weight: 800; font-size: 1.8rem; color: white !important; }
+        .nav-link { color: rgba(255,255,255,0.8) !important; margin: 0 15px; position: relative; }
+        .nav-link::before {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 50%;
+            background: #00C6FF; transition: width 0.3s ease; transform: translateX(-50%);
+        }
+        .nav-link:hover::before { width: 100%; }
+        .btn-nav-primary {
+            background: var(--water-gradient); color: white; border: none;
+            padding: 0.6rem 1.8rem; border-radius: 50px; font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.4);
+        }
+
+        /* --- HERO SECTION (DEEP OCEAN STYLE) --- */
+        .service-hero {
+            background: var(--deep-gradient); /* Matches About/Contact */
+            color: white; padding: 120px 0 100px;
+            position: relative; overflow: hidden; text-align: center;
+        }
+        .service-hero h1 { 
+            font-size: 3.5rem; margin-bottom: 1rem; 
+            background: linear-gradient(to right, #ffffff, #00C6FF); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+
+        /* Wave Separator */
+        .wave-bottom {
+            position: absolute; bottom: 0; left: 0; width: 100%; overflow: hidden; line-height: 0; transform: rotate(180deg);
+            z-index: 1;
+        }
+        .wave-bottom svg { position: relative; display: block; width: calc(100% + 1.3px); height: 100px; }
+        .shape-fill { fill: #ffffff; }
+
+        /* --- MODERN PRODUCT CARDS (ENHANCED) --- */
+        .modern-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(15px); /* Stronger blur for premium feel */
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            overflow: hidden; /* For image radius */
+            box-shadow: 0 15px 35px rgba(0, 20, 40, 0.08);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .modern-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 198, 255, 0.25); /* Cyan Glow on hover */
+            border-color: rgba(0, 198, 255, 0.5);
+        }
+
+        /* Card Image Container */
+        .card-img-wrapper {
+            position: relative;
+            height: 280px;
+            background: #eefbff; /* Light blue tint */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* Water drop shape clip for top of image area */
+            border-radius: 20px 20px 0 0; 
+        }
+
+        .card-img {
+            max-height: 85%;
+            object-fit: contain;
+            transition: transform 0.6s ease;
+            /* Floating Animation Constant */
+            animation: floatCard 6s ease-in-out infinite;
+        }
+        
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .modern-card:hover .card-img {
+            /* Slight rotation on hover */
+            transform: scale(1.1) rotate(3deg); 
+            animation-play-state: paused; /* Stop float on hover */
+        }
+
+        /* Badge */
+        .card-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--ocean-mid);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 2;
+            backdrop-filter: blur(5px);
+            border: 1px solid white;
+        }
+
+        .card-body-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            border-radius: 0 0 24px 24px;
+            background: white; /* White text area at bottom */
+        }
+
+        .price-badge {
+            background: var(--water-gradient);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Shine effect on price */
+        .price-badge::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        .btn-card-action {
+            background: white;
+            color: var(--ocean-mid);
+            border: 2px solid var(--ocean-mid);
+            font-weight: 700;
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        .btn-card-action:hover {
+            background: var(--ocean-mid);
+            color: white;
+            border-color: var(--ocean-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(3, 78, 132, 0.3);
+        }
+
+        /* --- MODAL STYLING (FULL PROCESS) --- */
+        .modal-content {
+            background: var(--deep-gradient); 
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+        .modal-header { border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .modal-footer { border-top: 1px solid rgba(255,255,255,0.1); }
+        
+        /* Inputs inside Modal */
+        .modal .form-label { font-size: 0.9rem; color: rgba(255,255,255,0.8); margin-bottom: 0.3rem; }
+        .modal .form-control, .modal .form-select {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 10px;
+        }
+        .modal .form-control:focus, .modal .form-select:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: var(--ocean-light);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(0, 198, 255, 0.1);
+        }
+        .modal .form-control::placeholder { color: rgba(255,255,255,0.4); }
+
+        /* Modern Quantity Selector */
+        .qty-wrapper {
+            display: flex; align-items: center; justify-content: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.05);
+            padding: 5px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .qty-btn-circle {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgba(0, 198, 255, 0.5);
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .qty-btn-circle:hover { background: var(--ocean-light); border-color: var(--ocean-light); color: #000; }
+        .qty-display {
+            font-size: 1.5rem; font-weight: 700; color: white; min-width: 40px; text-align: center;
+        }
+
+        /* Summary Box inside Modal */
+        .modal-summary-box {
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: 100%;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .summary-row {
+            display: flex; justify-content: space-between; margin-bottom: 10px;
+            font-size: 0.9rem; color: rgba(255,255,255,0.7);
+        }
+        .summary-total {
+            display: flex; justify-content: space-between; margin-top: 20px;
+            padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .total-price { font-size: 1.8rem; font-weight: 800; color: #00C6FF; text-shadow: 0 0 15px rgba(0, 198, 255, 0.3); }
+
+        /* --- Footer --- */
+        .footer { background: var(--ocean-dark); color: #94a3b8; padding: 4rem 0 2rem; position: relative; }
+        .footer-brand { color: white; font-weight: 700; font-size: 1.5rem; margin-bottom: 1rem; display: block; }
+        
+        @media (max-width: 768px) {
+            .service-hero h1 { font-size: 2.5rem; }
+            .card-img-wrapper { height: 220px; }
+            .qty-wrapper { width: 100%; justify-content: space-between; }
+            .qty-display { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Bubbles Background (For Deep Ocean Theme) -->
+    <div class="bubbles">
+        <div class="bubble" style="left: 10%; width: 20px; height: 20px; animation-duration: 8s;"></div>
+        <div class="bubble" style="left: 30%; width: 40px; height: 40px; animation-duration: 12s;"></div>
+        <div class="bubble" style="left: 70%; width: 25px; height: 25px; animation-duration: 9s;"></div>
+        <div class="bubble" style="left: 90%; width: 50px; height: 50px; animation-duration: 15s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-droplet me-2" style="color: #00C6FF;"></i> JALASHAYA
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'galary' %}">galary</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
+                </ul>
+                <a href="{% url 'services' %}" class="btn btn-nav-primary ms-lg-3 mt-3 mt-lg-0">Order Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Service Hero (Deep Ocean Style) -->
+    <section class="service-hero">
+        <div class="container" data-aos="fade-down">
+            <span class="badge rounded-pill px-3 py-2 mb-3 bg-white bg-opacity-10 border border-white border-opacity-25">
+                Premium Hydration Service
+            </span>
+            <h1>Select Your Plan</h1>
+            <p class="lead text-white-50 mb-4">Choose a product below to complete your order.</p>
+        </div>
+
+        <!-- Wave Separator -->
+        <div class="wave-bottom">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Product Selection (More Attractive Cards) -->
+    <section class="py-5" style="margin-top: -60px; position: relative; z-index: 2;">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Product 1 -->
+                <div class="col-md-4">
+                    <div class="modern-card" onclick="openOrderModal('500ml Bottle', 1.99, this)">
+                        <div class="card-badge"><i class="fas fa-star me-1"></i> Best Seller</div>
+                        <div class="card-img-wrapper">
+                            <!-- User's Image Path -->
+                            <img src="{% static 'images/logos.jpeg' %}" alt="Water Bottle" class="card-img">
+                        </div>
+                        <div class="card-body-content">
+                            <div>
+                                    <h4 class="fw-bold mb-1">Personal Pack</h4>
+                                    <p class="text-muted small mb-3">Perfect for gym and commute. 500ml size.</p>
+                                    <div class="price-badge">$1.99</div>
+                            </div>
+                            <button class="btn btn-card-action">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 2 -->
+                <div class="col-md-4">
+                    <div class="modern-card" onclick="openOrderModal('1L Family Pack (6 bottles)', 12.99, this)">
+                        <div class="card-badge"><i class="fas fa-home me-1"></i> Family Value</div>
+                        <div class="card-img-wrapper">
+                            <img src="{% static 'images/logos.jpeg' %}" alt="Water Pack" class="card-img">
+                        </div>
+                        <div class="card-body-content">
+                            <div>
+                                    <h4 class="fw-bold mb-1">Family Pack</h4>
+                                    <p class="text-muted small mb-3">Best value for home use. 1L bottles.</p>
+                                    <div class="price-badge">$12.99</div>
+                            </div>
+                            <button class="btn btn-card-action">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product 3 -->
+                <div class="col-md-4">
+                    <div class="modern-card" onclick="openOrderModal('5 Gallon Dispenser', 15.00, this)">
+                        <div class="card-badge"><i class="fas fa-building me-1"></i> Office Special</div>
+                        <div class="card-img-wrapper">
+                            <img src="{% static 'images/logos.jpeg' %}" alt="Water Jar" class="card-img">
+                        </div>
+                        <div class="card-body-content">
+                            <div>
+                                    <h4 class="fw-bold mb-1">Office Jar</h4>
+                                    <p class="text-muted small mb-3">5 Gallon dispenser for offices.</p>
+                                    <div class="price-badge">$15.00</div>
+                            </div>
+                            <button class="btn btn-card-action">Order Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FULL ORDER MODAL -->
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content text-start p-0">
+                <div class="modal-header">
+                    <h5 class="modal-title w-100 text-center"><i class="fas fa-shopping-bag me-2"></i> Complete Your Order</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row">
+                        <!-- LEFT COLUMN: FORM -->
+                        <div class="col-md-7 mb-4 mb-md-0">
+                            <form id="fullOrderForm">
+                                <div class="mb-4 p-3 rounded-3" style="background: rgba(255,255,255,0.05);">
+                                    <h6 class="fw-bold text-white mb-1" id="modalProductName">Product Name</h6>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="text-white-50">Price per unit:</span>
+                                        <span class="fw-bold text-info" id="modalPrice">$0.00</span>
+                                    </div>
+                                    
+                                    <label class="form-label mt-3">Select Quantity</label>
+                                    <!-- CUSTOM QTY SELECTOR -->
+                                    <div class="qty-wrapper">
+                                        <button type="button" class="qty-btn-circle" onclick="updateModalQty(-1)"><i class="fas fa-minus"></i></button>
+                                        <span class="qty-display" id="modalQty">1</span>
+                                        <button type="button" class="qty-btn-circle" onclick="updateModalQty(1)"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Select State</label>
+                                        <select class="form-select" id="stateSelect" required onchange="populateBranches()">
+                                            <option value="" selected disabled>-- State --</option>
+                                            <option value="Maharashtra">Maharashtra</option>
+                                            <option value="Delhi">Delhi</option>
+                                            <option value="Karnataka">Karnataka</option>
+                                            <option value="Gujarat">Gujarat</option>
+                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Select Branch</label>
+                                        <select class="form-select" id="branchSelect" disabled required>
+                                            <option value="">-- State First --</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-12">
+                                        <label class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="inputName" placeholder="John Doe" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Mobile Number</label>
+                                        <input type="tel" class="form-control" id="inputMobile" placeholder="+91 98765 43210" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="inputEmail" placeholder="john@example.com" required>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <label class="form-label">Delivery Address</label>
+                                        <textarea class="form-control" id="inputAddress" rows="2" placeholder="Street, City, Zip..." required></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- RIGHT COLUMN: SUMMARY -->
+                        <div class="col-md-5">
+                            <div class="modal-summary-box">
+                                <h5 class="mb-4 border-bottom border-white border-opacity-25 pb-3">Order Summary</h5>
+                                
+                                <div class="summary-row">
+                                    <span>Product:</span>
+                                    <span class="fw-bold text-white" id="summaryProduct">--</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Quantity:</span>
+                                    <span class="fw-bold text-white" id="summaryQty">1</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>State:</span>
+                                    <span class="fw-bold text-white" id="summaryState">--</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Branch:</span>
+                                    <span class="fw-bold text-white" id="summaryBranch">--</span>
+                                </div>
+                                
+                                <div class="summary-total">
+                                    <span>Total Amount:</span>
+                                    <span class="total-price" id="summaryTotal">$0.00</span>
+                                </div>
+
+                                <div class="mt-4 text-center">
+                                    <p class="small text-white-50 mb-3"><i class="fas fa-truck me-1"></i> Delivery within 24-48 Hours</p>
+                                    <button type="button" class="btn btn-nav-primary w-100 py-2 fw-bold" onclick="submitOrder()">Submit Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <span class="footer-brand"><i class="fas fa-droplet me-2 text-primary"></i>Jalashaya</span>
+                    <p>Premium hydration delivered with care. We believe in sustainability, purity, and exceptional service.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-white mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none text-white-50">Home</a></li>
+                        <li><a href="#" class="text-decoration-none text-white-50">Services</a></li>
+                        <li><a href="#" class="text-decoration-none text-white-50">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-white mb-3">Contact</h6>
+                    <ul class="list-unstyled text-white-50">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> 123 Ocean Drive, Blue City</li>
+                        <li><i class="fas fa-phone me-2"></i> +1 234 567 890</li>
+                        <li><i class="fas fa-envelope me-2"></i> support@jalashaya.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center pt-4 border-top border-secondary border-opacity-25 mt-3">
+                <p class="mb-0 small">&copy; 2024 Jalashaya Water Co. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        AOS.init({ once: true, duration: 800 });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.navbar');
+            if(window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // --- GLOBAL VARIABLES ---
+        let selectedPrice = 0;
+        let currentQty =1;
+        const orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
+
+        // --- LOCATION DATA ---
+        const locations = {
+            "Maharashtra": ["Mumbai Central", "Pune Camp", "Nagpur HQ", "Nashik Plant"],
+            "Delhi": ["Connaught Place", "Dwarka Sector 21", "Noida Industrial Area"],
+            "Karnataka": ["Bangalore Whitefield", "Mysore Palace Road", "Hubli City"],
+            "Gujarat": ["Ahmedabad SG Highway", "Surat Textile Market", "Vadodara"],
+            "Tamil Nadu": ["Chennai T. Nagar", "Coimbatore Peelamedu", "Madurai"]
+        };
+
+        // --- OPEN MODAL ---
+        function openOrderModal(name, price, cardElement) {
+            // 1. Reset Form
+            document.getElementById('fullOrderForm').reset();
+            document.getElementById('stateSelect').value = "";
+            document.getElementById('branchSelect').innerHTML = '<option value="">-- State First --</option>';
+            document.getElementById('branchSelect').disabled = true;
+            
+            // 2. Set Product Data
+            selectedPrice = price;
+            currentQty = 1; // Default to 1
+            document.getElementById('modalProductName').innerText = name;
+            document.getElementById('modalPrice').innerText = '$' + price.toFixed(2);
+            document.getElementById('summaryProduct').innerText = name;
+            
+            // 3. Update Quantity UI
+            document.getElementById('modalQty').innerText = currentQty;
+            updateSummaryTotal();
+
+            // 4. Open Modal
+            orderModal.show();
+        }
+
+        // --- QUANTITY LOGIC ---
+        function updateModalQty(change) {
+            let newQty = currentQty + change;
+            if (newQty < 1) return; // Prevent 0 or negative
+            
+            currentQty = newQty;
+            document.getElementById('modalQty').innerText = currentQty;
+            updateSummaryTotal();
+        }
+
+        function updateSummaryTotal() {
+            document.getElementById('summaryQty').innerText = currentQty;
+            let total = selectedPrice * currentQty;
+            document.getElementById('summaryTotal').innerText = '$' + total.toFixed(2);
+        }
+
+        // --- STATE & BRANCH LOGIC ---
+        function populateBranches() {
+            const stateSelect = document.getElementById('stateSelect');
+            const branchSelect = document.getElementById('branchSelect');
+            const selectedState = stateSelect.value;
+            const summaryState = document.getElementById('summaryState');
+
+            branchSelect.innerHTML = '<option value="" selected disabled>-- Choose Branch --</option>';
+            summaryState.innerText = selectedState;
+
+            if (selectedState && locations[selectedState]) {
+                branchSelect.disabled = false;
+                locations[selectedState].forEach(branch => {
+                    const option = document.createElement('option');
+                    option.value = branch;
+                    option.innerText = branch;
+                    branchSelect.appendChild(option);
+                });
+            } else {
+                branchSelect.disabled = true;
+                branchSelect.innerHTML = '<option value="">-- Select State First --</option>';
+            }
+            updateSummaryBranch();
+        }
+
+        document.getElementById('branchSelect').addEventListener('change', updateSummaryBranch);
+
+        function updateSummaryBranch() {
+            const branch = document.getElementById('branchSelect').value;
+            document.getElementById('summaryBranch').innerText = branch || "--";
+        }
+
+        // --- SUBMIT ORDER ---
+        function submitOrder() {
+            // Validate
+            const form = document.getElementById('fullOrderForm');
+            const name = document.getElementById('inputName').value;
+            const mobile = document.getElementById('inputMobile').value;
+            const branch = document.getElementById('branchSelect').value;
+            
+            if (!name || !mobile || !branch || currentQty === 0) {
+                alert("Please fill in all required fields (Name, Mobile, State, Branch).");
+                return;
+            }
+
+            // Simulate Submitting
+            const btn = document.querySelector('#orderModal .btn-nav-primary');
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerText = "Order Placed!";
+                btn.classList.remove('btn-nav-primary');
+                btn.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    alert("Success! Your order for " + currentQty + " items has been received.");
+                    orderModal.hide();
+                    location.reload(); // Reset
+                }, 1000);
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

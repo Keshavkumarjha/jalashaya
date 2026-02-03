@@ -1,0 +1,400 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalashaya - Contact Us</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Deep Ocean Theme Consistent */
+            --ocean-dark: #021B2E;
+            --ocean-mid: #034E84;
+            --ocean-light: #00C6FF;
+            --water-gradient: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+            --deep-gradient: linear-gradient(135deg, #021B2E 0%, #034E84 100%);
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f0f9ff;
+            color: var(--ocean-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; font-weight: 700; }
+
+        /* --- Bubbles Animation --- */
+        .bubbles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: 0; pointer-events: none;
+        }
+        .bubble {
+            position: absolute; bottom: -100px; background: rgba(0, 198, 255, 0.1);
+            border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+            animation: rise 15s infinite ease-in;
+        }
+        @keyframes rise {
+            0% { bottom: -100px; transform: translateX(0) scale(0.5); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { bottom: 100vh; transform: translateX(50px) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            padding: 1.5rem 0; transition: all 0.4s ease; background: transparent;
+        }
+        .navbar.scrolled {
+            background: rgba(2, 27, 46, 0.95); backdrop-filter: blur(15px);
+            padding: 1rem 0; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand { font-weight: 800; font-size: 1.8rem; color: white !important; }
+        .nav-link { color: rgba(255,255,255,0.8) !important; margin: 0 15px; position: relative; }
+        .nav-link::before {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 50%;
+            background: #00C6FF; transition: width 0.3s ease; transform: translateX(-50%);
+        }
+        .nav-link:hover::before { width: 100%; }
+        .btn-nav-primary {
+            background: var(--water-gradient); color: white; border: none;
+            padding: 0.6rem 1.8rem; border-radius: 50px; font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.4);
+        }
+
+        /* --- DEEP OCEAN HERO (Same as About Page) --- */
+        .about-hero {
+            background: var(--deep-gradient); color: white; padding: 140px 0 100px;
+            position: relative; overflow: hidden; text-align: center;
+        }
+        .about-hero h1 { 
+            font-size: 3.5rem; margin-bottom: 1.5rem; 
+            background: linear-gradient(to right, #fff, #00C6FF); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+
+        /* Wave Separator */
+        .wave-bottom {
+            position: absolute; bottom: 0; left: 0; width: 100%; overflow: hidden; line-height: 0; transform: rotate(180deg);
+            z-index: 1;
+        }
+        .wave-bottom svg { position: relative; display: block; width: calc(100% + 1.3px); height: 100px; }
+        .shape-fill { fill: #ffffff; }
+
+        /* --- Main Contact Section --- */
+        .contact-section { padding: 6rem 0; position: relative; }
+
+        /* Glass Form Container */
+        .contact-form-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 20, 40, 0.08);
+            height: 100%;
+        }
+
+        .form-label { font-weight: 600; color: var(--ocean-mid); margin-bottom: 0.5rem; }
+        .form-control, .form-select {
+            padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid #cbd5e1;
+            background: rgba(255,255,255,0.8); transition: 0.3s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--ocean-light); box-shadow: 0 0 0 4px rgba(0, 198, 255, 0.1);
+            background: white;
+        }
+
+        /* Contact Info Cards */
+        .info-card {
+            background: white; border-radius: 24px; padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.5);
+            height: 100%;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+
+        .info-item {
+            display: flex; align-items: flex-start; margin-bottom: 2rem;
+        }
+        .info-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--ocean-mid); font-size: 1.2rem;
+            margin-right: 1.5rem; flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Social Links */
+        .social-link {
+            width: 45px; height: 45px; background: var(--ocean-mid);
+            color: white; display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%; text-decoration: none; margin-right: 15px; transition: 0.3s;
+        }
+        .social-link:hover { background: var(--ocean-light); transform: translateY(-3px); }
+
+        /* Map Placeholder */
+        .map-placeholder {
+            background-image: url('https://images.unsplash.com/photo-1524661135-423995a1e0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); 
+            background-size: cover; background-position: center;
+            height: 250px; border-radius: 20px; position: relative; overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .map-overlay {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(2, 27, 46, 0.7); display: flex; align-items: center; justify-content: center;
+        }
+
+        /* --- Footer --- */
+        .footer { background: var(--ocean-dark); color: #94a3b8; padding: 4rem 0 2rem; position: relative; }
+        .footer-brand { color: white; font-weight: 700; font-size: 1.5rem; margin-bottom: 1rem; display: block; }
+        
+        @media (max-width: 768px) {
+            .about-hero h1 { font-size: 2.5rem; }
+            .contact-form-container { padding: 2rem; margin-bottom: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Bubbles Background -->
+    <div class="bubbles">
+        <div class="bubble" style="left: 10%; width: 20px; height: 20px; animation-duration: 8s;"></div>
+        <div class="bubble" style="left: 30%; width: 40px; height: 40px; animation-duration: 12s;"></div>
+        <div class="bubble" style="left: 70%; width: 25px; height: 25px; animation-duration: 9s;"></div>
+        <div class="bubble" style="left: 90%; width: 50px; height: 50px; animation-duration: 15s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-droplet me-2" style="color: #00C6FF;"></i> JALASHAYA
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}" class="active">Contact</a></li>
+                </ul>
+                <a href="{% url 'services' %}" class="btn btn-nav-primary ms-lg-3 mt-3 mt-lg-0">Order Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section (DEEP OCEAN STYLE LIKE ABOUT PAGE) -->
+    <section class="about-hero">
+        <div class="container" data-aos="fade-down">
+            <span class="badge rounded-pill px-3 py-2 mb-3 bg-white bg-opacity-10 border border-white border-opacity-25">
+                Get in Touch
+            </span>
+            <h1>We'd Love To Hear From You</h1>
+            <p class="lead text-white-50 mb-4">Whether you have a question, feedback, or just want to say hello.</p>
+            <a href="#contact-form" class="btn btn-light btn-lg rounded-pill px-4 shadow text-primary fw-bold">Contact Us</a>
+        </div>
+
+        <!-- Wave Separator (For Deep Ocean Look) -->
+        <div class="wave-bottom">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Contact Main Section -->
+    <section class="contact-section" id="contact-form">
+        <div class="container">
+            <div class="row">
+                <!-- LEFT: Contact Form -->
+                <div class="col-lg-7 mb-5 mb-lg-0" data-aos="fade-right">
+                    <div class="contact-form-container">
+                        <h3 class="mb-4 fw-bold" style="color: var(--ocean-mid);">Send us a Message</h3>
+                        <form id="contactForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" placeholder="John" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" placeholder="Doe" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" placeholder="john@example.com" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Subject</label>
+                                    <select class="form-select">
+                                        <option selected>General Inquiry</option>
+                                        <option>Order Support</option>
+                                        <option>Partnership</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Message</label>
+                                    <textarea class="form-control" rows="5" placeholder="How can we help you?" required></textarea>
+                                </div>
+                            </div>
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-lg py-3" style="background: var(--ocean-mid); color: white;">
+                                    Send Message <i class="fas fa-paper-plane ms-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Contact Info -->
+                <div class="col-lg-5" data-aos="fade-left">
+                    <div class="info-card">
+                        <h3 class="mb-4 fw-bold text-center" style="color: var(--ocean-mid);">Contact Information</h3>
+                        
+                        <!-- Map Placeholder -->
+                        <div class="map-placeholder">
+                            <div class="map-overlay">
+                                <a href="#" class="btn btn-sm btn-light rounded-pill fw-bold">View on Map <i class="fas fa-location-arrow ms-1"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                                <div>
+                                    <small class="text-muted d-block">Phone</small>
+                                    <div class="fw-bold fs-5">+1 234 567 890</div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                                <div>
+                                    <small class="text-muted d-block">Email</small>
+                                    <div class="fw-bold fs-5">support@jalashaya.com</div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div>
+                                    <small class="text-muted d-block">Address</small>
+                                    <div class="fw-bold">123 Ocean Drive,<br>Blue City, BC 9000</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 text-muted opacity-25">
+
+                        <div class="text-center">
+                            <small class="text-muted fw-bold mb-3 d-block">Follow Us</small>
+                            <div class="d-flex justify-content-center">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <span class="footer-brand"><i class="fas fa-droplet me-2 text-primary"></i>Jalashaya</span>
+                    <p>Premium hydration delivered with care. We believe in sustainability, purity, and exceptional service.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-white mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none text-white-50">Home</a></li>
+                        <li><a href="#" class="text-decoration-none text-white-50">Services</a></li>
+                        <li><a href="#" class="text-decoration-none text-white-50">About Us</a></li>
+                        <li><a href="#" class="text-decoration-none text-white-50">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6 class="text-white mb-3">Newsletter</h6>
+                    <p class="small">Subscribe for hydration tips and offers.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control border-0" placeholder="Email Address">
+                        <button class="btn btn-primary rounded-end" style="background: var(--water-gradient); border: none;">Join</button>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center pt-4 border-top border-secondary border-opacity-25 mt-3">
+                <p class="mb-0 small">&copy; 2024 Jalashaya Water Co. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        AOS.init({ once: true, duration: 800 });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.navbar');
+            if(window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // Form Submit Simulation
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            // Change button state
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Sending...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check me-2"></i> Message Sent!';
+                btn.classList.remove('btn-nav-primary');
+                btn.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    alert("Thank you for contacting Jalashaya! We will get back to you shortly.");
+                    this.reset();
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.add('btn-nav-primary');
+                    btn.classList.remove('btn-success');
+                }, 1000);
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

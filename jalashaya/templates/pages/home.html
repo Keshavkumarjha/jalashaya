@@ -1,0 +1,873 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalashaya - Deep Ocean Purity</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* DEEP OCEAN THEME */
+            --ocean-dark: #021B2E;
+            --ocean-mid: #034E84;
+            --ocean-light: #00C6FF;
+            --water-gradient: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+            --deep-gradient: linear-gradient(135deg, #032641 0%, #034E84 100%);
+            
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--ocean-dark);
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #021B2E; }
+        ::-webkit-scrollbar-thumb { background: #00C6FF; border-radius: 5px; }
+
+        /* --- Background Animations (Bubbles) --- */
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: rise 15s infinite ease-in;
+        }
+
+        @keyframes rise {
+            0% { bottom: -100px; transform: translateX(0) scale(0.5); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { bottom: 120vh; transform: translateX(50px) scale(1.2); opacity: 0; }
+        }
+
+        /* --- Navigation --- */
+        .navbar {
+            padding: 1.5rem 0;
+            transition: all 0.4s ease;
+            background: transparent;
+            z-index: 1000;
+        }
+
+        .navbar.scrolled {
+            background: rgba(2, 27, 46, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 1rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: white !important;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-weight: 500;
+            margin: 0 15px;
+            position: relative;
+            transition: 0.3s;
+        }
+        
+        .navbar.scrolled .nav-link { color: white !important; }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: #00C6FF;
+            transition: width 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::before { width: 100%; }
+
+        .btn-nav-primary {
+            background: var(--water-gradient);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-nav-primary:hover {
+            transform: translateY(-2px);
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 198, 255, 0.6);
+        }
+
+        /* --- HERO SECTION (MAJOR UPGRADE) --- */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: var(--deep-gradient); /* Deep Ocean Background */
+            padding-top: 100px;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Water Caustics Overlay (Light pattern) */
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2300C6FF' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #ffffff, #00C6FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        /* --- IMAGE FIX: GLOWING BUBBLE WRAPPER --- */
+        .product-showcase {
+            position: relative;
+            z-index: 10;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .bottle-wrapper {
+            /* This creates the deep ocean glow behind the image */
+            background: radial-gradient(circle at 50% 50%, rgba(0, 198, 255, 0.4) 0%, rgba(2, 27, 46, 0) 70%);
+            border-radius: 50%; /* Makes the container round/bubble shaped */
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 50px rgba(0, 198, 255, 0.2);
+            position: relative;
+        }
+
+        .product-img {
+            max-width: 100%;
+            height: auto;
+            /* Cuts the image into a droplet shape if it has background */
+            clip-path: ellipse(130% 100% at 50% 100%);
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+            transition: transform 0.3s;
+        }
+        
+        .product-showcase:hover .product-img {
+            transform: scale(1.05);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        /* --- REALISTIC OCEAN WAVES --- */
+        .wave-separator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 5;
+        }
+
+        .wave-separator svg {
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 150px;
+        }
+
+        .wave-fill {
+            fill: #ffffff;
+            animation: waveMove 10s linear infinite;
+        }
+        
+        @keyframes waveMove {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-25px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* --- Stats Section (Now matches ocean theme) --- */
+        .stats-section {
+            background: white;
+            color: var(--ocean-dark);
+            position: relative;
+            padding-top: 4rem;
+        }
+
+        .stat-item h2 { font-size: 3.5rem; font-weight: 800; margin-bottom: 0; color: var(--ocean-mid); }
+
+        /* --- Glass Cards (Features) --- */
+        .glass-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(3, 78, 132, 0.15);
+            border-color: var(--ocean-light);
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--ocean-mid);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .glass-card:hover .icon-circle {
+            transform: scale(1.1) rotate(10deg);
+            background: var(--water-gradient);
+            color: white;
+        }
+
+        /* --- Process Section --- */
+        .process-section { padding: 6rem 0; background: #f8fafc; }
+        .process-card { text-align: center; position: relative; }
+        .process-icon {
+            width: 80px; height: 80px;
+            background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; font-size: 2rem; color: var(--ocean-mid);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 2px solid #e2e8f0;
+        }
+
+        /* --- Testimonials --- */
+        .testimonials-section { padding: 6rem 0; background: white; }
+        .testimonial-box {
+            background: white; padding: 3rem; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05); border: 1px solid #f1f5f9;
+            text-align: center; margin: 10px;
+        }
+
+        /* --- Product Detail Showcase --- */
+        .detail-section { padding: 8rem 0; background: #fff; }
+        .detail-img-wrapper {
+            position: relative; border-radius: 30px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); background: #f0f9ff;
+        }
+        .detail-img-wrapper img { transition: transform 0.5s ease; object-fit: cover; height: 100%; width: 100%; }
+        .detail-img-wrapper:hover img { transform: scale(1.05); }
+
+        .badge-water {
+            background: rgba(3, 78, 132, 0.1); color: var(--ocean-mid);
+            padding: 0.5rem 1rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem;
+            border: 1px solid rgba(3, 78, 132, 0.2);
+        }
+
+        /* --- Gallery --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .gallery-item {
+            position: relative; border-radius: 20px; overflow: hidden; height: 300px; cursor: pointer;
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .gallery-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(2, 27, 46,0.9), transparent);
+            padding: 20px; color: white;
+            transform: translateY(100%); transition: transform 0.4s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item:hover .gallery-overlay { transform: translateY(0); }
+
+        /* --- CTA --- */
+        .cta-section {
+            padding: 6rem 0; background: var(--ocean-dark); color: white;
+            position: relative; overflow: hidden; text-align: center;
+        }
+        .cta-bg-blob {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(0, 198, 255, 0.2) 0%, rgba(0,0,0,0) 70%);
+            top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;
+        }
+        .cta-content { position: relative; z-index: 2; }
+
+        /* --- Footer --- */
+        .footer { background: var(--ocean-dark); color: #94a3b8; padding: 5rem 0 2rem; position: relative; }
+        .footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--water-gradient); }
+        .footer-title { color: white; font-weight: 700; margin-bottom: 1.5rem; }
+        .social-link {
+            width: 40px; height: 40px; background: rgba(255,255,255,0.1);
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: white; transition: all 0.3s; text-decoration: none; margin-right: 10px;
+        }
+        .social-link:hover { background: var(--water-gradient); transform: translateY(-3px); }
+
+        /* --- Toast Notification --- */
+        .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+        .custom-toast {
+            background: white; padding: 1rem 1.5rem; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-left: 5px solid var(--ocean-light);
+            display: flex; align-items: center; gap: 15px;
+            transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); margin-top: 10px;
+        }
+        .custom-toast.show { transform: translateX(0); }
+
+        /* --- Mobile --- */
+        @media (max-width: 991px) {
+            .hero-title { font-size: 3rem; }
+            .product-showcase { margin-top: 3rem; }
+            .wave-separator svg { height: 100px; }
+            .navbar-collapse {
+                background: rgba(2, 27, 46, 0.95); backdrop-filter: blur(10px);
+                padding: 2rem; border-radius: 20px; margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-droplet me-2" style="color: #00C6FF;"></i> JALASHAYA
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">contact us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'galary' %}">Gallery</a></li>
+                </ul>
+                <button class="btn btn-nav-primary ms-lg-3 mt-3 mt-lg-0" onclick="showToast('Added to cart!')">Order Now</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION (Enhanced) -->
+    <section class="hero-section" id="home">
+        <!-- Caustics Overlay -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Bubbles -->
+        <div class="bubbles">
+            <div class="bubble" style="left: 10%; width: 20px; height: 20px; animation-duration: 8s;"></div>
+            <div class="bubble" style="left: 30%; width: 40px; height: 40px; animation-duration: 12s; animation-delay: 2s;"></div>
+            <div class="bubble" style="left: 70%; width: 25px; height: 25px; animation-duration: 9s; animation-delay: 4s;"></div>
+            <div class="bubble" style="left: 90%; width: 50px; height: 50px; animation-duration: 15s; animation-delay: 1s;"></div>
+        </div>
+
+        <div class="container position-relative z-2">
+            <div class="row align-items-center">
+                <!-- Text Content -->
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1200">
+                    <span class="badge-water mb-3 d-inline-block border border-2 border-white text-white" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);">
+                        <i class="fas fa-leaf me-1"></i> 100% Natural Minerals
+                    </span>
+                    <h1 class="hero-title">Purity in Every Drop.<br>Life in Every Sip.</h1>
+                    <p class="hero-subtitle">
+                        Sourced from the pristine springs and filtered with precision. Jalashaya brings you the perfect balance of minerals and freshness.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <button class="btn btn-nav-primary px-4 py-3" onclick="showToast('Navigating to Shop...')">Shop Collection</button>
+                        <button class="btn btn-outline-light rounded-pill px-4 py-3 fw-bold" onclick="scrollToSection('about')">Learn More</button>
+                    </div>
+                    
+                    <div class="d-flex gap-4 mt-5">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-star text-warning fs-4 me-2"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">4.9/5</h6>
+                                <small class="text-white-50">Rating</small>
+                            </div>
+                        </div>
+                        <div class="vr bg-white opacity-25"></div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-award text-info fs-4 me-2"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Premium</h6>
+                                <small class="text-white-50">Quality</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Image (Fixed & Enhanced) -->
+                <div class="col-lg-6 text-center product-showcase" data-aos="zoom-in" data-aos-duration="1200">
+                    <div class="bottle-wrapper">
+                        <!-- Added class 'product-img' for the droplet clip-path effect -->
+                        <img src="{% static 'images/logos.jpeg' %}" alt="Pure Water Bottle" class="product-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Realistic Ocean Wave Separator -->
+        <div class="wave-separator">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="wave-fill"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Stats Counter -->
+    <section class="stats-section py-5">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="stat-item">
+                        <h2 class="counter" data-target="50">0</h2>
+                        <p class="mb-0 text-muted fw-bold">Million Bottles Sold</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-item">
+                        <h2 class="counter" data-target="120">0</h2>
+                        <p class="mb-0 text-muted fw-bold">Cities Served</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-item">
+                        <h2 class="counter" data-target="99">0</h2>
+                        <p class="mb-0 text-muted fw-bold">% Purity Guaranteed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About / Features -->
+    <section class="py-5" id="about" style="background-color: #fff;">
+        <div class="container py-5">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-6 fw-bold text-dark">Why Jalashaya?</h2>
+                <p class="text-muted">Engineered by nature, perfected by science.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="glass-card text-center">
+                        <div class="icon-circle mx-auto">
+                            <i class="fas fa-hand-holding-water"></i>
+                        </div>
+                        <h4>Natural Source</h4>
+                        <p class="text-muted mt-3">Sourced from deep underground aquifers protected from pollution.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="glass-card text-center">
+                        <div class="icon-circle mx-auto">
+                            <i class="fas fa-shield-virus"></i>
+                        </div>
+                        <h4>Triple Filtration</h4>
+                        <p class="text-muted mt-3">UV, Ozone, and Micro-filtration ensure 100% safety and zero bacteria.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="glass-card text-center">
+                        <div class="icon-circle mx-auto">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                        <h4>Eco-Friendly</h4>
+                        <p class="text-muted mt-3">Our bottles are 100% recyclable. We plant a tree for every 100 bottles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="process-section" id="process">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="fw-bold">Our Purification Process</h2>
+                <p class="text-muted">From the mountains to your doorstep.</p>
+            </div>
+            <div class="row text-center g-4">
+                <div class="col-md-3 col-6" data-aos="fade-up">
+                    <div class="process-card">
+                        <div class="process-icon"><i class="fas fa-water"></i></div>
+                        <h5>Collection</h5>
+                        <p class="small text-muted">Natural spring water collection.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="process-card">
+                        <div class="process-icon"><i class="fas fa-filter"></i></div>
+                        <h5>Filtration</h5>
+                        <p class="small text-muted">Removal of all impurities.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="process-card">
+                        <div class="process-icon"><i class="fas fa-flask"></i></div>
+                        <h5>Mineralization</h5>
+                        <p class="small text-muted">Adding essential electrolytes.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="process-card">
+                        <div class="process-icon"><i class="fas fa-shipping-fast"></i></div>
+                        <h5>Delivery</h5>
+                        <p class="small text-muted">Fresh to your home.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Customer Stories</h2>
+                <p class="text-muted">Hear what our hydration family says.</p>
+            </div>
+            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="d-flex justify-content-center">
+                            <div class="col-md-8">
+                                <div class="testimonial-box" data-aos="zoom-in">
+                                    <div class="mb-3 text-warning">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="lead fst-italic">"Jalashaya water tastes incredibly fresh. My family has switched completely and we feel the difference in energy levels."</p>
+                                    <h5 class="fw-bold mt-3">- Emily R.</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-center">
+                            <div class="col-md-8">
+                                <div class="testimonial-box" data-aos="zoom-in">
+                                    <div class="mb-3 text-warning">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="lead fst-italic">"Fast delivery and eco-friendly packaging. It's exactly what I was looking for in a premium water brand."</p>
+                                    <h5 class="fw-bold mt-3">- Michael D.</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Detail Showcase -->
+    <section class="detail-section bg-light position-relative" id="products">
+        <div class="container">
+            <div class="row align-items-center flex-column-reverse flex-lg-row">
+                <div class="col-lg-6 mt-5 mt-lg-0" data-aos="fade-right">
+                    <div class="detail-img-wrapper">
+                        <img src="{% static 'images/logos.jpeg' %}" alt="Pure Water Bottle">
+                        <div class="position-absolute bottom-0 start-0 p-4 text-white" style="background: linear-gradient(transparent, rgba(0,0,0,0.7)); width: 100%;">
+                            <span class="h5">Premium Label Design</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 ps-lg-5" data-aos="fade-left">
+                    <h2 class="fw-bold mb-4">Experience the<br><span style="color: var(--ocean-mid);">Crisp Difference</span></h2>
+                    <p class="text-muted lead">Our unique mineral composition gives Jalashaya a distinctly smooth taste that hydrates you faster.</p>
+                    
+                    <ul class="list-unstyled mt-4">
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-check-circle text-primary me-3 fs-5" style="color: var(--ocean-mid) !important;"></i>
+                            <span>pH Balanced for perfect absorption</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-check-circle text-primary me-3 fs-5" style="color: var(--ocean-mid) !important;"></i>
+                            <span>Electrolytes added for energy</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-check-circle text-primary me-3 fs-5" style="color: var(--ocean-mid) !important;"></i>
+                            <span>BPA-Free Food Grade Plastic</span>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex align-items-center mt-5 gap-4">
+                        <h3 class="fw-bold mb-0">$1.99 <span class="text-muted fs-6 fw-normal">/ 500ml</span></h3>
+                        <button class="btn btn-nav-primary px-4" onclick="showToast('Added to Cart successfully!')">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lifestyle Gallery -->
+    <section class="py-5 bg-white" id="gallery">
+        <div class="container py-4">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Hydration Lifestyle</h2>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item" data-aos="fade-up">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Gym">
+                    <div class="gallery-overlay">
+                        <h5>Gym & Fitness</h5>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Work">
+                    <div class="gallery-overlay">
+                        <h5>Workplace</h5>
+                    </div>
+                </div>
+                <div class="gallery-item" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1520031441872-265149a9e690?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Home">
+                    <div class="gallery-overlay">
+                        <h5>At Home</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-bg-blob"></div>
+        <div class="container cta-content" data-aos="zoom-in">
+            <h2 class="display-5 fw-bold mb-3">Ready to feel the difference?</h2>
+            <p class="lead mb-5 opacity-75">Join thousands of healthy households today. Get 20% off your first subscription.</p>
+            <button class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary shadow">Start Your Order</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h3 class="text-white mb-3"><i class="fas fa-droplet me-2 text-primary"></i>Jalashaya</h3>
+                    <p class="mb-4">Delivering purity to your doorstep. Committed to sustainable hydration and superior quality.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-2 mb-4">
+                    <h5 class="footer-title">Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-white">Home</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-white">About</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-white">Products</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 mb-4">
+                    <h5 class="footer-title">Support</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-white">FAQ</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-white">Shipping</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-white">Returns</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-white-50 hover-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="footer-title">Stay Hydrated</h5>
+                    <p class="small">Subscribe to get updates on new products and special offers.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control border-0" placeholder="Email Address">
+                        <button class="btn btn-primary rounded-end" style="background: var(--water-gradient); border: none;">Join</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-4 border-top border-secondary border-opacity-25">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 small">&copy; 2024 Jalashaya Water Co. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0 small">Designed with <i class="fas fa-heart text-danger"></i> for purity.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        // Initialize AOS (Animate On Scroll)
+        AOS.init({
+            once: true,
+            offset: 100,
+            duration: 800,
+            easing: 'ease-out-cubic'
+        });
+
+        // Navbar scroll logic
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth Scroll Helper
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Custom Toast Notification System (No alerts)
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.innerHTML = `
+                <i class="fas fa-check-circle text-primary fs-4" style="color: var(--ocean-mid) !important;"></i>
+                <div>
+                    <h6 class="mb-0 fw-bold">Success</h6>
+                    <small class="text-muted">${message}</small>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 400); // Wait for transition out
+            }, 3000);
+        }
+
+        // Simple Number Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200; // The lower the slower
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target + (target === 99 ? '%' : target === 50 ? 'M+' : '+');
+                    }
+                };
+                updateCount();
+            });
+        };
+
+        // Trigger counter when stats section is in view
+        let counted = false;
+        const statsSection = document.querySelector('.stats-section');
+        window.addEventListener('scroll', () => {
+            if(!statsSection) return;
+            const sectionPos = statsSection.getBoundingClientRect().top;
+            const screenPos = window.innerHeight / 1.3;
+
+            if(sectionPos < screenPos && !counted) {
+                animateCounters();
+                counted = true;
+            }
+        });
+    </script>
+</body>
+</html>
