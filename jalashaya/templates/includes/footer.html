@@ -1,0 +1,30 @@
+<footer class="footer bg-dark text-light pt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Jalashaya</h5>
+                <p>Pure mineral water delivered fresh to your doorstep.</p>
+            </div>
+
+            <div class="col-md-4">
+                <h6>Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}" class="text-light">Home</a></li>
+                    <li><a href="{% url 'about' %}" class="text-light">About</a></li>
+                    <li><a href="{% url 'services' %}" class="text-light">Shop</a></li>
+                    <li><a href="{% url 'contact' %}" class="text-light">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4">
+                <h6>Contact</h6>
+                <p>Email: support@jalashaya.com</p>
+                <p>Phone: +91 90000 00000</p>
+            </div>
+        </div>
+
+        <div class="text-center border-top pt-3 mt-3">
+            <small>© {{ now|date:"Y" }} Jalashaya. All rights reserved.</small>
+        </div>
+    </div>
+</footer>

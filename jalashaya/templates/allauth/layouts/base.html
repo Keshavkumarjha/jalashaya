@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}Jalashaya – Pure Water{% endblock %}
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO BLOCK -->
+    {% block seo %}
+    <meta name="description" content="Pure, natural mineral water delivered to your doorstep.">
+    {% endblock %}
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+    {% include "includes/header.html" %}
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    {% include "includes/footer.html" %}
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
