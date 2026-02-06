@@ -10,13 +10,15 @@ from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from config.views import home
+
 
 admin.site.site_header = "Jalashaya – Water Supply Management"
 admin.site.site_title = "Jalashaya Admin"
 admin.site.index_title = "Operations & Data Management"
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("", home, name="home"),
     path(
         "about/",
         TemplateView.as_view(template_name="pages/about.html"),
@@ -28,9 +30,9 @@ urlpatterns = [
         name="services",
     ),
     path(
-        "galary/",
+        "gallery/",
         TemplateView.as_view(template_name="pages/galary.html"),
-        name="galary",
+        name="gallery",
     ),
       path(
         "contact/",
