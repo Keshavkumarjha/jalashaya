@@ -1,13 +1,44 @@
-/* These styles are generated from project.scss. */
-
-.alert-debug {
-  color: black;
-  background-color: white;
-  border-color: #d6e9c6;
+:root {
+  --brand-900: #05233e;
+  --brand-700: #0f4b7a;
+  --brand-500: #1394d3;
+  --brand-100: #e8f7ff;
 }
 
-.alert-error {
-  color: #b94a48;
-  background-color: #f2dede;
-  border-color: #eed3d7;
+body {
+  font-family: "Inter", sans-serif;
+  color: #10263a;
+  background: #f6fbff;
+}
+
+.site-nav {
+  background: linear-gradient(90deg, var(--brand-900), var(--brand-700));
+}
+
+.hero-section {
+  background: radial-gradient(circle at top right, #1eb2f0, var(--brand-900));
+}
+
+.section-title {
+  font-weight: 800;
+}
+
+.product-card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.product-card img {
+  height: 220px;
+  object-fit: cover;
+}
+
+.site-footer {
+  background: #031e34;
+  color: #c3d9ea;
+}
+
+.site-footer a {
+  color: #9edbff;
+  text-decoration: none;
 }
