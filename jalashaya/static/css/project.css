@@ -1,44 +1,156 @@
 :root {
-  --brand-900: #05233e;
-  --brand-700: #0f4b7a;
-  --brand-500: #1394d3;
-  --brand-100: #e8f7ff;
+    --ocean-dark: #021B2E;
+    --ocean-mid: #034E84;
+    --ocean-light: #00C6FF;
+    --water-gradient: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+    --deep-gradient: linear-gradient(135deg, #021B2E 0%, #034E84 100%);
+    --glass-bg: rgba(255, 255, 255, 0.05);
 }
 
-body {
-  font-family: "Inter", sans-serif;
-  color: #10263a;
-  background: #f6fbff;
+/* --- ANIMATED BUBBLES (For Hero) --- */
+.bubbles-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    overflow: hidden; z-index: 0; pointer-events: none;
+}
+.bubble {
+    position: absolute; bottom: -100px; background: rgba(0, 198, 255, 0.15);
+    border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+    animation: rise 15s infinite ease-in;
+}
+@keyframes rise {
+    0% { bottom: -100px; transform: translateX(0) scale(0.5); opacity: 0; }
+    50% { opacity: 0.6; }
+    100% { bottom: 100vh; transform: translateX(50px) scale(1.2); opacity: 0; }
 }
 
+/* --- MODERN NAVBAR --- */
 .site-nav {
-  background: linear-gradient(90deg, var(--brand-900), var(--brand-700));
+    padding: 1.5rem 0; transition: all 0.4s ease; background: transparent;
+    backdrop-filter: blur(0); /* Starts clean */
+}
+.site-nav.sticky-top {
+    background: transparent !important; /* Override Bootstrap */
 }
 
+/* Scroll Effect (Handled by JS usually, or use Bootstrap .navbar-dark) */
+.site-nav.scrolled {
+    background: rgba(2, 27, 46, 0.9) !important;
+    backdrop-filter: blur(15px);
+    padding: 1rem 0;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 800; font-size: 1.8rem; color: white !important;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+.navbar-brand i { color: var(--ocean-light) !important; }
+
+.nav-link {
+    color: rgba(255,255,255,0.8) !important; font-weight: 500; position: relative; margin: 0 10px;
+    transition: 0.3s;
+}
+.nav-link:hover { color: #fff !important; }
+/* Hover Underline Animation */
+.nav-link::after {
+    content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
+    background: var(--ocean-light); transition: width 0.3s ease; transform: translateX(-50%);
+}
+.nav-link:hover::after { width: 80%; }
+
+/* Modern "Order Now" Button */
+.btn-info {
+    background: var(--water-gradient) !important; /* Override Bootstrap info */
+    color: white !important;
+    border: none; padding: 0.6rem 2rem;
+    border-radius: 50px; font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 198, 255, 0.4);
+    transition: transform 0.3s ease;
+}
+.btn-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 198, 255, 0.5);
+    color: white !important;
+}
+
+/* --- HERO SECTION --- */
 .hero-section {
-  background: radial-gradient(circle at top right, #1eb2f0, var(--brand-900));
+    background: var(--deep-gradient); /* Deep Blue Gradient */
+    color: white; position: relative; overflow: hidden;
 }
 
+/* Typography */
+.hero-section h1 {
+    font-weight: 800; font-size: 3.5rem; line-height: 1.2;
+    background: linear-gradient(to right, #ffffff, #00C6FF);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-section p.lead {
+    font-size: 1.25rem; color: rgba(255,255,255,0.7); max-width: 600px;
+}
+
+/* Buttons */
+.btn-light {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+    color: white; backdrop-filter: blur(5px); border-radius: 50px; padding: 0.8rem 2rem;
+    transition: all 0.3s;
+}
+.btn-light:hover {
+    background: white; color: var(--ocean-mid); border-color: white;
+}
+
+/* --- FEATURED PRODUCTS --- */
 .section-title {
-  font-weight: 800;
+    font-weight: 800; color: var(--ocean-dark); position: relative;
+    padding-left: 15px;
+}
+.section-title::before {
+    content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 5px; height: 35px; background: var(--water-gradient); border-radius: 5px;
 }
 
+/* Modern Product Card */
 .product-card {
-  border-radius: 1rem;
-  overflow: hidden;
+    border: none; border-radius: 20px; overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    height: 100%;
+}
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 198, 255, 0.2);
 }
 
-.product-card img {
-  height: 220px;
-  object-fit: cover;
+.card-img-top {
+    height: 220px; object-fit: cover; /* Ensures uniform height */
+    transition: transform 0.5s ease;
+}
+.product-card:hover .card-img-top {
+    transform: scale(1.05);
 }
 
+.card-body h5 { font-weight: 700; color: var(--ocean-dark); margin-top: 10px; }
+.card-body .mb-2 { font-weight: 700; color: var(--ocean-mid); font-size: 1.2rem; }
+
+.btn-outline-primary {
+    color: var(--ocean-mid) !important; border-color: var(--ocean-mid) !important;
+    border-radius: 50px; font-weight: 600;
+}
+.btn-outline-primary:hover {
+    background: var(--ocean-mid) !important; color: white !important; border-color: var(--ocean-mid);
+}
+
+/* --- FOOTER --- */
 .site-footer {
-  background: #031e34;
-  color: #c3d9ea;
+    background: var(--ocean-dark); color: #cbd5e1;
+    position: relative; padding: 4rem 0 2rem;
 }
+.site-footer h5, .site-footer h6 { color: white; font-weight: 700; margin-bottom: 1.2rem; }
 
 .site-footer a {
-  color: #9edbff;
-  text-decoration: none;
+    color: #94a3b8; text-decoration: none; transition: all 0.3s;
+    display: inline-block; margin-bottom: 0.5rem;
+}
+.site-footer a:hover {
+    color: var(--ocean-light); padding-left: 5px; /* Slide effect */
 }

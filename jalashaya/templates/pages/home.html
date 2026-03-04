@@ -3,41 +3,57 @@
 {% block title %}Jalashaya | Pure Water Delivery{% endblock title %}
 
 {% block content %}
-<section class="hero-section py-5">
-  <div class="container py-5">
+<!-- HERO SECTION (Updated with Bubbles) -->
+<section class="hero-section py-5 position-relative">
+  <!-- Animated Bubbles Background -->
+  <div class="bubbles-container">
+    <div class="bubble" style="left: 10%; width: 20px; height: 20px; animation-duration: 8s;"></div>
+    <div class="bubble" style="left: 30%; width: 40px; height: 40px; animation-duration: 12s;"></div>
+    <div class="bubble" style="left: 70%; width: 25px; height: 25px; animation-duration: 9s;"></div>
+    <div class="bubble" style="left: 90%; width: 50px; height: 50px; animation-duration: 15s;"></div>
+  </div>
+
+  <div class="container py-5 position-relative z-2">
     <div class="row align-items-center g-4">
       <div class="col-lg-7 text-white">
-        <span class="badge rounded-pill bg-info mb-3">ISO-grade water process</span>
+        <span class="badge rounded-pill bg-info mb-3" style="background: rgba(0, 198, 255, 0.2) !important; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px);">
+            ISO-grade water process
+        </span>
         <h1 class="display-5 fw-bold">Premium Drinking Water for Modern Homes & Businesses</h1>
         <p class="lead text-light-emphasis">Safe, mineral-balanced water with reliable doorstep delivery and transparent quality checks.</p>
-        <a href="{% url 'services' %}" class="btn btn-light btn-lg rounded-pill px-4">Explore Products</a>
+        <a href="{% url 'services' %}" class="btn btn-light btn-lg rounded-pill px-4 shadow-lg">
+            Explore Products <i class="fas fa-arrow-right ms-2"></i>
+        </a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="py-5">
+<!-- FEATURED PRODUCTS (Updated) -->
+<section class="py-5 bg-light">
   <div class="container">
     <h2 class="section-title mb-4">Featured Products</h2>
     <div class="row g-4">
       {% for product in products %}
         <div class="col-md-6 col-xl-3">
-          <div class="card h-100 product-card border-0 shadow-sm">
+          <div class="card h-100 product-card">
             {% if product.primary_image %}
               <img src="{{ product.primary_image }}" class="card-img-top" alt="{{ product.name }}">
             {% endif %}
             <div class="card-body">
-              <small class="text-muted">{{ product.category.name }}</small>
+              <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">{{ product.category.name }}</small>
               <h5 class="mt-2">{{ product.name }}</h5>
               <p class="mb-2">₹{{ product.price }}</p>
-              <a href="{% url 'product_detail' product.slug %}" class="btn btn-outline-primary btn-sm rounded-pill">View Details</a>
+              <a href="{% url 'product_detail' product.slug %}" class="btn btn-outline-primary btn-sm rounded-pill w-100">View Details</a>
             </div>
           </div>
         </div>
       {% empty %}
-        <p>No products available.</p>
+        <p class="text-muted">No products available.</p>
       {% endfor %}
     </div>
   </div>
 </section>
 {% endblock content %}
+
+<!-- FOOTER (Updated) -->
