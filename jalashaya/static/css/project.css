@@ -1,13 +1,127 @@
-/* These styles are generated from project.scss. */
-
-.alert-debug {
-  color: black;
-  background-color: white;
-  border-color: #d6e9c6;
+:root {
+  --brand-950: #031a2f;
+  --brand-900: #062d4a;
+  --brand-700: #0b5f94;
+  --brand-500: #12a7dd;
+  --brand-300: #6dd9ff;
+  --brand-100: #e7f9ff;
 }
 
-.alert-error {
-  color: #b94a48;
-  background-color: #f2dede;
-  border-color: #eed3d7;
+body {
+  font-family: "Inter", sans-serif;
+  color: #113147;
+  background: radial-gradient(circle at 15% 5%, #c8f3ff 0%, #f4fbff 35%, #eef9ff 100%);
+}
+
+.site-nav {
+  background: linear-gradient(90deg, rgba(3, 26, 47, 0.95), rgba(11, 95, 148, 0.93));
+  backdrop-filter: blur(8px);
+}
+
+.brand-mark {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--brand-300), var(--brand-500));
+  color: #043255;
+}
+
+.btn-water {
+  background: linear-gradient(120deg, #12a7dd, #0b5f94);
+  color: #fff;
+  border: none;
+}
+
+.btn-water:hover { color: #fff; opacity: 0.94; }
+
+.page-hero,
+.hero-section {
+  background: radial-gradient(circle at 20% 10%, #7be3ff, var(--brand-900) 58%);
+}
+
+.hero-badge {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.hero-bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  animation: float 8s ease-in-out infinite;
+}
+
+.bubble-1 { width: 140px; height: 140px; top: 16%; right: 8%; }
+.bubble-2 { width: 90px; height: 90px; top: 52%; right: 22%; animation-delay: 1s; }
+.bubble-3 { width: 48px; height: 48px; top: 36%; right: 14%; animation-delay: 2s; }
+
+.glass-card {
+  padding: 1.3rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.brand-strip { background: #fff; }
+
+.brand-pill {
+  border: 1px solid #d3eef9;
+  background: #fbfeff;
+  border-radius: 999px;
+  padding: 0.65rem 0.9rem;
+  font-weight: 600;
+  color: #0e567f;
+}
+
+.stat-card,
+.info-card,
+.step-card,
+.gallery-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.2rem;
+  box-shadow: 0 14px 35px rgba(7, 45, 74, 0.08);
+  height: 100%;
+}
+
+.gallery-card { padding: 0; overflow: hidden; }
+.gallery-card img { width: 100%; height: 280px; object-fit: cover; transition: transform .4s; }
+.gallery-card:hover img { transform: scale(1.05); }
+
+.stat-card h3 { font-size: 2rem; margin-bottom: 0.2rem; color: var(--brand-700); }
+.section-title { font-weight: 800; }
+.bg-soft { background: linear-gradient(180deg, #f4fbff 0%, #e9f7ff 100%); }
+
+.product-card { border-radius: 1rem; overflow: hidden; transition: transform 0.3s ease; }
+.product-card:hover { transform: translateY(-6px); }
+.product-card img { height: 220px; object-fit: cover; }
+
+.info-card i { font-size: 1.4rem; color: var(--brand-500); margin-bottom: 0.6rem; }
+.step-card span {
+  display: inline-flex; width: 2.2rem; height: 2.2rem; border-radius: 50%; align-items: center; justify-content: center;
+  background: var(--brand-100); color: var(--brand-700); font-weight: 800; margin-bottom: 0.5rem;
+}
+
+.cta-panel {
+  background: linear-gradient(95deg, var(--brand-950), var(--brand-500));
+  border-radius: 1.2rem;
+  padding: 1.4rem;
+  box-shadow: 0 14px 35px rgba(5, 32, 58, 0.3);
+}
+
+.site-footer { background: #031e34; color: #c3d9ea; }
+.site-footer a { color: #9edbff; text-decoration: none; }
+
+.reveal-up { opacity: 0; transform: translateY(18px); transition: all 0.6s ease; }
+.reveal-up.show { opacity: 1; transform: translateY(0); }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
