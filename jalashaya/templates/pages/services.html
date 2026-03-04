@@ -45,13 +45,20 @@
         <div class="modal-body">
           <p id="modal-product-name" class="fw-semibold"></p>
           <div class="row g-3">
-            <div class="col-md-6">{{ order_form.customer_name }}</div>
-            <div class="col-md-6">{{ order_form.customer_email }}</div>
-            <div class="col-md-6">{{ order_form.customer_mobile }}</div>
-            <div class="col-md-6">{{ order_form.quantity }}</div>
-            <div class="col-md-6">{{ order_form.branch }}</div>
-            <div class="col-12">{{ order_form.delivery_address }}</div>
-            <div class="col-12">{{ order_form.note }}</div>
+            <div class="col-md-6"><input class="form-control" name="customer_name" placeholder="Full name" required></div>
+            <div class="col-md-6"><input type="email" class="form-control" name="customer_email" placeholder="Email" required></div>
+            <div class="col-md-6"><input class="form-control" name="customer_mobile" placeholder="Mobile" required></div>
+            <div class="col-md-6"><input type="number" min="1" name="quantity" class="form-control" value="1" required></div>
+            <div class="col-md-6">
+              <select class="form-select" name="branch" required>
+                <option value="">Choose branch</option>
+                {% for branch in branches %}
+                  <option value="{{ branch.id }}">{{ branch.state.name }} - {{ branch.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-12"><textarea class="form-control" name="delivery_address" placeholder="Delivery address" rows="2" required></textarea></div>
+            <div class="col-12"><textarea class="form-control" name="note" placeholder="Order note (optional)" rows="2"></textarea></div>
           </div>
         </div>
         <div class="modal-footer">

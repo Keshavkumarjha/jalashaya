@@ -17,14 +17,13 @@
     <div class="col-lg-7">
       <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
-          <form method="post" novalidate>
-            {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+          <form method="post">
             {% csrf_token %}
             <div class="row g-3">
-              <div class="col-md-6">{{ form.name }}{{ form.name.errors }}</div>
-              <div class="col-md-6">{{ form.email }}{{ form.email.errors }}</div>
-              <div class="col-12">{{ form.subject }}{{ form.subject.errors }}</div>
-              <div class="col-12">{{ form.message }}{{ form.message.errors }}</div>
+              <div class="col-md-6">{{ form.name }}</div>
+              <div class="col-md-6">{{ form.email }}</div>
+              <div class="col-12">{{ form.subject }}</div>
+              <div class="col-12">{{ form.message }}</div>
             </div>
             <button class="btn btn-primary rounded-pill mt-3">Submit Request</button>
           </form>

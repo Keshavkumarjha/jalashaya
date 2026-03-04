@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_http_methods
 
 from .forms import ContactMessageForm, OrderCreateForm
-from .models import Branch, Category, Order, Product, ProductImage, State
+from .models import Branch, Category, Product, ProductImage, State
 
 
 def _get_primary_image(product: Product):
@@ -50,6 +50,7 @@ def home(request):
 @require_GET
 def services(request):
     categories = Category.objects.filter(is_active=True).order_by("sort_order", "name")
+    branches = Branch.objects.filter(is_active=True).select_related("state").order_by("state__name", "name")
 
     category_slug = request.GET.get("category")
     products_qs = (
@@ -77,6 +78,7 @@ def services(request):
             "categories": categories,
             "active_category": active_category,
             "products": products,
+            "branches": branches,
             "order_form": OrderCreateForm(),
         },
     )
@@ -129,20 +131,14 @@ def create_order(request):
     form = OrderCreateForm(request.POST)
 
     if not form.is_valid():
-        first_error = next(iter(form.non_field_errors()), None)
-        if not first_error:
-            for errors in form.errors.values():
-                if errors:
-                    first_error = errors[0]
-                    break
-        messages.error(request, first_error or "Unable to place order. Please verify your details.")
+        messages.error(request, form.errors.as_text())
         return redirect(reverse("services"))
 
     product = form.cleaned_data["product"]
     qty = form.cleaned_data["quantity"]
     subtotal, delivery_fee, total = _calc_totals(product, qty)
 
-    Order.objects.create(
+    OrderCreateForm.Meta.model.objects.create(
         customer_name=form.cleaned_data["customer_name"],
         customer_email=form.cleaned_data["customer_email"],
         customer_mobile=form.cleaned_data["customer_mobile"],
