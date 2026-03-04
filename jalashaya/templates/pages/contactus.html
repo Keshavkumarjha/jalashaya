@@ -1,40 +1,31 @@
 {% extends 'layouts/base.html' %}
-{% block title %}Contact | Jalashaya{% endblock title %}
-{% block content %}
-<section class="page-hero reveal-up">
-  <div class="container py-5 text-white">
-    <span class="badge hero-badge mb-3">Support & Sales</span>
-    <h1 class="display-6 fw-bold">Let’s Talk Hydration</h1>
-    <p class="text-white-50 mb-0">Bulk plans, recurring deliveries, and enterprise support in one place.</p>
-  </div>
-</section>
 
+{% block title %}Contact | Jalashaya{% endblock title %}
+
+{% block content %}
 <section class="container py-5">
   <div class="row g-4">
-    <div class="col-lg-5 reveal-up">
-      <div class="info-card h-100">
-        <h4>Contact Jalashaya</h4>
-        <p class="text-muted">We help homes and companies with reliable premium drinking water supply.</p>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item px-0">Fast dispatch and route-based delivery</li>
-          <li class="list-group-item px-0">Quality-tested purification process</li>
-          <li class="list-group-item px-0">Dedicated customer support team</li>
-        </ul>
-      </div>
+    <div class="col-lg-5">
+      <h1>Contact Jalashaya</h1>
+      <p class="text-muted">For bulk orders, recurring plans, corporate contracts, or support, send us your query.</p>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item px-0">Dedicated dispatch & route planning</li>
+        <li class="list-group-item px-0">Quality-tested source and packaging</li>
+        <li class="list-group-item px-0">Real support for urgent deliveries</li>
+      </ul>
     </div>
-    <div class="col-lg-7 reveal-up">
+    <div class="col-lg-7">
       <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
-          <form method="post" novalidate>
-            {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+          <form method="post">
             {% csrf_token %}
             <div class="row g-3">
-              <div class="col-md-6">{{ form.name }}{{ form.name.errors }}</div>
-              <div class="col-md-6">{{ form.email }}{{ form.email.errors }}</div>
-              <div class="col-12">{{ form.subject }}{{ form.subject.errors }}</div>
-              <div class="col-12">{{ form.message }}{{ form.message.errors }}</div>
+              <div class="col-md-6">{{ form.name }}</div>
+              <div class="col-md-6">{{ form.email }}</div>
+              <div class="col-12">{{ form.subject }}</div>
+              <div class="col-12">{{ form.message }}</div>
             </div>
-            <button class="btn btn-water rounded-pill mt-3">Submit Request</button>
+            <button class="btn btn-primary rounded-pill mt-3">Submit Request</button>
           </form>
         </div>
       </div>

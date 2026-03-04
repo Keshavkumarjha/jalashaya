@@ -1,9 +1,6 @@
-{% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark site-nav sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'home' %}">
-      <span class="brand-mark"><i class="fa-solid fa-droplet"></i></span> JALASHAYA
-    </a>
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}"><i class="fa-solid fa-droplet"></i> Jalashaya</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -15,7 +12,7 @@
         <li class="nav-item"><a class="nav-link" href="{% url 'gallery' %}">Gallery</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
       </ul>
-      <a href="{% url 'services' %}" class="btn btn-water ms-lg-3 rounded-pill">Order Now</a>
+      <a href="{% url 'services' %}" class="btn btn-info rounded-pill ms-lg-3 text-white">Order Now</a>
     </div>
   </div>
 </nav>

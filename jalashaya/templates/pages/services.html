@@ -1,17 +1,13 @@
 {% extends 'layouts/base.html' %}
-{% block title %}Products & Services | Jalashaya{% endblock title %}
-{% block content %}
-<section class="page-hero reveal-up">
-  <div class="container py-5 text-white">
-    <span class="badge hero-badge mb-3">Product Catalog</span>
-    <h1 class="display-6 fw-bold">Choose Your Perfect Hydration Pack</h1>
-    <p class="text-white-50 mb-0">Designed for homes, offices, and institutions with premium quality assurance.</p>
-  </div>
-</section>
 
+{% block title %}Products & Services | Jalashaya{% endblock title %}
+
+{% block content %}
 <section class="container py-5">
-  <div class="d-flex flex-wrap gap-2 mb-4 reveal-up">
-    <a href="{% url 'services' %}" class="btn btn-sm {% if not active_category %}btn-primary{% else %}btn-outline-primary{% endif %}">All Products</a>
+  <h1 class="mb-4">Order Drinking Water</h1>
+
+  <div class="d-flex flex-wrap gap-2 mb-4">
+    <a href="{% url 'services' %}" class="btn btn-sm {% if not active_category %}btn-primary{% else %}btn-outline-primary{% endif %}">All</a>
     {% for category in categories %}
       <a href="{% url 'services' %}?category={{ category.slug }}" class="btn btn-sm {% if active_category and active_category.id == category.id %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ category.name }}</a>
     {% endfor %}
@@ -19,18 +15,20 @@
 
   <div class="row g-4">
     {% for product in products %}
-      <div class="col-md-6 col-xl-4 reveal-up">
+      <div class="col-md-6 col-xl-4">
         <div class="card product-card h-100 border-0 shadow-sm">
           {% if product.primary_image %}<img src="{{ product.primary_image }}" class="card-img-top" alt="{{ product.name }}">{% endif %}
           <div class="card-body d-flex flex-column">
             <h5>{{ product.name }}</h5>
-            <p class="text-muted small">{{ product.description|default:'High purity packaged drinking water.'|truncatechars:95 }}</p>
-            <p class="fw-bold fs-5 text-primary">₹{{ product.price }}</p>
-            <button class="btn btn-water mt-auto rounded-pill order-now-btn" data-bs-toggle="modal" data-bs-target="#orderModal" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}">Order Now</button>
+            <p class="text-muted small">{{ product.description|default:'High purity packaged drinking water.'|truncatechars:90 }}</p>
+            <p class="fw-bold">₹{{ product.price }}</p>
+            <button class="btn btn-primary mt-auto rounded-pill order-now-btn" data-bs-toggle="modal" data-bs-target="#orderModal" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}">Order Now</button>
           </div>
         </div>
       </div>
-    {% empty %}<p>No products found.</p>{% endfor %}
+    {% empty %}
+      <p>No products found in this category.</p>
+    {% endfor %}
   </div>
 </section>
 
@@ -45,18 +43,27 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <p id="modal-product-name" class="fw-semibold text-primary"></p>
+          <p id="modal-product-name" class="fw-semibold"></p>
           <div class="row g-3">
-            <div class="col-md-6">{{ order_form.customer_name }}</div>
-            <div class="col-md-6">{{ order_form.customer_email }}</div>
-            <div class="col-md-6">{{ order_form.customer_mobile }}</div>
-            <div class="col-md-6">{{ order_form.quantity }}</div>
-            <div class="col-md-6">{{ order_form.branch }}</div>
-            <div class="col-12">{{ order_form.delivery_address }}</div>
-            <div class="col-12">{{ order_form.note }}</div>
+            <div class="col-md-6"><input class="form-control" name="customer_name" placeholder="Full name" required></div>
+            <div class="col-md-6"><input type="email" class="form-control" name="customer_email" placeholder="Email" required></div>
+            <div class="col-md-6"><input class="form-control" name="customer_mobile" placeholder="Mobile" required></div>
+            <div class="col-md-6"><input type="number" min="1" name="quantity" class="form-control" value="1" required></div>
+            <div class="col-md-6">
+              <select class="form-select" name="branch" required>
+                <option value="">Choose branch</option>
+                {% for branch in branches %}
+                  <option value="{{ branch.id }}">{{ branch.state.name }} - {{ branch.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-12"><textarea class="form-control" name="delivery_address" placeholder="Delivery address" rows="2" required></textarea></div>
+            <div class="col-12"><textarea class="form-control" name="note" placeholder="Order note (optional)" rows="2"></textarea></div>
           </div>
         </div>
-        <div class="modal-footer"><button type="submit" class="btn btn-water">Confirm Order</button></div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Confirm Order</button>
+        </div>
       </form>
     </div>
   </div>
