@@ -36,7 +36,7 @@ def home(request):
         Product.objects.filter(is_active=True)
         .select_related("category")
         .prefetch_related(
-            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all")
+            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all"),
         )
         .order_by("sort_order", "-created_at")[:8]
     )
@@ -57,7 +57,7 @@ def services(request):
         Product.objects.filter(is_active=True, category__is_active=True)
         .select_related("category")
         .prefetch_related(
-            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all")
+            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all"),
         )
         .order_by("sort_order", "-created_at")
     )
@@ -91,7 +91,7 @@ def category_detail(request, slug):
         Product.objects.filter(is_active=True, category=category)
         .select_related("category")
         .prefetch_related(
-            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all")
+            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all"),
         )
         .order_by("sort_order", "-created_at")
     )
@@ -154,8 +154,9 @@ def create_order(request):
         customer_mobile=form.cleaned_data["customer_mobile"],
         product=product,
         branch=form.cleaned_data["branch"],
+        customer_address=chosen_address,
         quantity=qty,
-        delivery_address=form.cleaned_data["delivery_address"],
+        delivery_address=resolved_delivery_address[:255],
         note=form.cleaned_data["note"],
         subtotal=subtotal,
         delivery_fee=delivery_fee,
@@ -227,5 +228,5 @@ def product_quick_info(request):
             "track_inventory": product.track_inventory,
             "stock_qty": product.stock_qty,
             "image_url": image,
-        }
+        },
     )

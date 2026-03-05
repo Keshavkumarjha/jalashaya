@@ -33,6 +33,34 @@ class OrderCreateForm(forms.ModelForm):
         self.fields["delivery_address"].widget.attrs.update({"class": "form-control", "placeholder": "Complete delivery address"})
         self.fields["note"].widget.attrs.update({"class": "form-control", "rows": 3, "placeholder": "Any special instructions"})
 
+        self.fields["customer_name"].widget.attrs.update({"class": "form-control", "placeholder": "Your full name"})
+        self.fields["customer_email"].widget.attrs.update({"class": "form-control", "placeholder": "you@example.com"})
+        self.fields["customer_mobile"].widget.attrs.update({"class": "form-control", "placeholder": "+91 9876543210"})
+        self.fields["branch"].widget.attrs.update({"class": "form-control"})
+        self.fields["quantity"].widget.attrs.update({"class": "form-control", "min": 1})
+        self.fields["note"].widget.attrs.update(
+            {"class": "form-control", "rows": 3, "placeholder": "Any special instructions"},
+        )
+        self.fields["delivery_address"].widget = forms.HiddenInput()
+
+        self.fields["selected_address"].widget.attrs.update({"class": "form-control", "id": "id_selected_address"})
+        self.fields["selected_address"].choices = [("", "Add New Address")]
+        self.fields["save_address"].widget.attrs.update({"id": "id_save_address"})
+
+        for field_name, placeholder in [
+            ("address_label", "Home / Office / Other"),
+            ("address_line_1", "Flat / House no, Building, Street"),
+            ("address_line_2", "Area (optional)"),
+            ("landmark", "Landmark (optional)"),
+            ("city", "City"),
+            ("state_name", "State"),
+            ("postal_code", "PIN code"),
+            ("country", "Country"),
+        ]:
+            self.fields[field_name].widget.attrs.update({"class": "form-control", "placeholder": placeholder})
+
+        self.fields["delivery_address"].required = False
+
     def clean(self):
         cleaned_data = super().clean()
         product_id = cleaned_data.get("product_id")
@@ -70,6 +98,7 @@ class OrderCreateForm(forms.ModelForm):
             raise forms.ValidationError("Please add delivery address.")
 
         cleaned_data["product"] = product
+        cleaned_data["chosen_address"] = chosen_address
         return cleaned_data
 
 

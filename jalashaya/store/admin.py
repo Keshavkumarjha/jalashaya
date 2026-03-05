@@ -189,6 +189,7 @@ class OrderAdmin(admin.ModelAdmin):
         "product",
         "branch",
         "quantity",
+        "customer_address",
         "formatted_total",
         "status_badge",
         "created_at",
@@ -199,7 +200,7 @@ class OrderAdmin(admin.ModelAdmin):
     autocomplete_fields = ("product", "branch")
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
-    list_select_related = ("product", "branch")
+    list_select_related = ("product", "branch", "customer_address")
 
     readonly_fields = (
         "subtotal",
@@ -215,6 +216,7 @@ class OrderAdmin(admin.ModelAdmin):
                 "customer_name",
                 "customer_email",
                 "customer_mobile",
+                "customer_address",
                 "delivery_address",
                 "note",
             )

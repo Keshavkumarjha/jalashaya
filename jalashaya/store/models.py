@@ -1,7 +1,8 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.text import slugify
-from django.core.validators import MinValueValidator
 import uuid
+
 
 class TimeStampedModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -19,9 +20,6 @@ class ActiveModel(models.Model):
 
 
 class SEOModel(models.Model):
-    """
-    Reusable SEO fields (expert pattern)
-    """
     slug = models.SlugField(max_length=220, unique=True, blank=True)
     seo_title = models.CharField(max_length=70, blank=True, null=True)
     seo_description = models.CharField(max_length=160, blank=True, null=True)
@@ -31,6 +29,8 @@ class SEOModel(models.Model):
 
     class Meta:
         abstract = True
+
+
 class State(ActiveModel, TimeStampedModel):
     name = models.CharField(max_length=120, unique=True)
     code = models.CharField(max_length=10, unique=True)
@@ -40,6 +40,8 @@ class State(ActiveModel, TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+
 class Branch(ActiveModel, TimeStampedModel):
     state = models.ForeignKey(State, on_delete=models.PROTECT, related_name="branches")
     name = models.CharField(max_length=150)
@@ -48,13 +50,12 @@ class Branch(ActiveModel, TimeStampedModel):
 
     class Meta:
         unique_together = ("state", "name")
-        indexes = [
-            models.Index(fields=["state", "name"]),
-        ]
+        indexes = [models.Index(fields=["state", "name"])]
 
     def __str__(self):
         return f"{self.name} ({self.state.code})"
-    
+
+
 class Category(ActiveModel, TimeStampedModel, SEOModel):
     name = models.CharField(max_length=120, unique=True)
     sort_order = models.PositiveIntegerField(default=0)
@@ -69,39 +70,23 @@ class Category(ActiveModel, TimeStampedModel, SEOModel):
 
     def __str__(self):
         return self.name
-    
+
+
 class Product(ActiveModel, TimeStampedModel, SEOModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.PROTECT,
-        related_name="products",
-        db_index=True,
-    )
-
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="products", db_index=True)
     name = models.CharField(max_length=200)
     sku = models.CharField(max_length=50, unique=True, db_index=True)
     badge_text = models.CharField(max_length=50, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        validators=[MinValueValidator(0)],
-    )
-
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     track_inventory = models.BooleanField(default=False)
     stock_qty = models.PositiveIntegerField(default=0)
-
     sort_order = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ["sort_order", "-created_at"]
-        indexes = [
-            models.Index(fields=["category", "is_active"]),
-            models.Index(fields=["is_active"]),
-        ]
+        indexes = [models.Index(fields=["category", "is_active"]), models.Index(fields=["is_active"])]
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -110,6 +95,8 @@ class Product(ActiveModel, TimeStampedModel, SEOModel):
 
     def __str__(self):
         return f"{self.name} ({self.sku})"
+
+
 class ProductImage(TimeStampedModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
     image_url = models.URLField()
@@ -117,23 +104,54 @@ class ProductImage(TimeStampedModel):
     is_primary = models.BooleanField(default=False)
 
     class Meta:
-        indexes = [
-            models.Index(fields=["product", "is_primary"]),
+        indexes = [models.Index(fields=["product", "is_primary"])]
+
+
+class CustomerAddress(ActiveModel, TimeStampedModel):
+    customer_name = models.CharField(max_length=200)
+    customer_email = models.EmailField(db_index=True)
+    customer_mobile = models.CharField(max_length=20, blank=True, null=True)
+    label = models.CharField(max_length=80, blank=True, null=True)
+    address_line_1 = models.CharField(max_length=255)
+    address_line_2 = models.CharField(max_length=255, blank=True, null=True)
+    landmark = models.CharField(max_length=200, blank=True, null=True)
+    city = models.CharField(max_length=100)
+    state_name = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=12)
+    country = models.CharField(max_length=80, default="India")
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["customer_email", "is_active"])]
+
+    @property
+    def full_address(self):
+        parts = [
+            self.address_line_1,
+            self.address_line_2,
+            self.landmark,
+            self.city,
+            self.state_name,
+            self.postal_code,
+            self.country,
         ]
+        return ", ".join([part for part in parts if part])
+
+    def __str__(self):
+        return f"{self.customer_name} - {self.full_address[:60]}"
+
+
 class Order(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
     customer_name = models.CharField(max_length=200)
     customer_email = models.EmailField(db_index=True)
     customer_mobile = models.CharField(max_length=20)
-
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
-
+    customer_address = models.ForeignKey(CustomerAddress, on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
     delivery_address = models.CharField(max_length=255)
     note = models.TextField(blank=True, null=True)
-
     status = models.CharField(
         max_length=20,
         choices=[
@@ -146,16 +164,15 @@ class Order(TimeStampedModel):
         default="pending",
         db_index=True,
     )
-
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         ordering = ["-created_at"]
-        indexes = [
-            models.Index(fields=["status", "created_at"]),
-        ]
+        indexes = [models.Index(fields=["status", "created_at"])]
+
+
 class ContactMessage(TimeStampedModel):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
