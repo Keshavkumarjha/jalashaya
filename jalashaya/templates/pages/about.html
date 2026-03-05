@@ -1,40 +1,249 @@
-{% extends 'layouts/base.html' %}
-{% block title %}About Jalashaya{% endblock title %}
+{% extends 'layouts/base.html' %}{% load static %}
+
+{% block title %}About Us – Jalashaya{% endblock %}
+
 {% block content %}
-<section class="page-hero reveal-up">
-  <div class="container py-5 text-white">
-    <span class="badge hero-badge mb-3">Our Story</span>
-    <h1 class="display-6 fw-bold">A Modern Drinking Water Brand Built on Trust</h1>
-    <p class="text-white-50 mb-0">Inspired by top water brands and built for consistent quality and service.</p>
-  </div>
+
+{# ============================================================ #}
+{# PAGE HERO                                                     #}
+{# ============================================================ #}
+<section class="page-hero" style="padding-top:60px;">
+  <div class="badge">Our Story</div>
+  <h1 class="heading-xl">
+    Born from a Belief<br><span class="text-gradient">In Pure Living</span>
+  </h1>
+  <p class="page-hero-sub">
+    Since 2018, Jalashaya has been on a mission to bring the purest Himalayan water
+    to every Indian home — because health begins with what you drink.
+  </p>
 </section>
 
-<section class="container py-5">
-  <div class="row g-4 align-items-center">
-    <div class="col-lg-6 reveal-up">
-      <h2 class="section-title">Who We Are</h2>
-      <p>Jalashaya delivers premium packaged drinking water with a mission to offer safe hydration and dependable customer experience.</p>
-      <p>Our quality operations are designed to deliver the same clean taste in every bottle and every can.</p>
+{# ============================================================ #}
+{# OUR STORY                                                     #}
+{# ============================================================ #}
+<section class="section container">
+  <div class="story-grid">
+
+    {# Visual side #}
+    <div style="position:relative;" class="reveal">
+      <div class="story-img-wrap">
+        <div class="story-water-icon">🏔️</div>
+      </div>
+      <div class="story-card story-card-1">
+        <i class="fas fa-award"></i>
+        <strong>Award Winning</strong>
+        <small>Best Water Brand 2023</small>
+      </div>
+      <div class="story-card story-card-2">
+        <i class="fas fa-flask"></i>
+        <strong>99.9% Pure</strong>
+        <small>Lab Verified Quality</small>
+      </div>
     </div>
-    <div class="col-lg-6 reveal-up">
-      <div class="info-card">
-        <h5>Quality Promise</h5>
-        <ul class="mb-0">
-          <li>Multi-stage purification</li>
-          <li>Hygienic bottling and sealing</li>
-          <li>Batch quality checks</li>
-          <li>On-time delivery commitment</li>
-        </ul>
+
+    {# Content side #}
+    <div class="reveal reveal-delay-2">
+      <div class="badge">Founded 2018</div>
+      <h2 class="heading-lg">
+        A Journey of<br><span class="text-gradient">Pure Purpose</span>
+      </h2>
+      <p style="color:var(--muted);line-height:1.8;margin-bottom:1.2rem;">
+        Jalashaya (meaning "abode of water" in Sanskrit) was founded with one powerful belief —
+        every Indian deserves access to pure, mineral-rich drinking water without compromise.
+      </p>
+      <p style="color:var(--muted);line-height:1.8;margin-bottom:1.2rem;">
+        Our founders, after witnessing water quality issues in urban India, decided to build a
+        company that sources from pristine Himalayan springs and delivers purity at scale.
+      </p>
+      <p style="color:var(--muted);line-height:1.8;margin-bottom:1.2rem;">
+        Today, we serve over 50,000 families across 25 cities, with a team of 200+ dedicated
+        professionals who share our passion for clean water and sustainable practices.
+      </p>
+
+      <div class="story-milestones">
+        <div class="milestone">
+          <div class="milestone-year">2018</div>
+          <div class="milestone-text">
+            <strong>Founded in Delhi</strong>
+            <span>Started with 3 team members and a dream to purify India</span>
+          </div>
+        </div>
+        <div class="milestone">
+          <div class="milestone-year">2020</div>
+          <div class="milestone-text">
+            <strong>BIS & ISO Certification</strong>
+            <span>Achieved all major quality certifications</span>
+          </div>
+        </div>
+        <div class="milestone">
+          <div class="milestone-year">2023</div>
+          <div class="milestone-text">
+            <strong>25 Cities, 50K+ Customers</strong>
+            <span>Expanded pan-India with cold-chain delivery</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="container pb-5">
-  <div class="row g-4">
-    <div class="col-md-4 reveal-up"><div class="stat-card text-center"><h3 data-count="10">0</h3><p>Years of Service</p></div></div>
-    <div class="col-md-4 reveal-up"><div class="stat-card text-center"><h3 data-count="500">0</h3><p>Daily Deliveries</p></div></div>
-    <div class="col-md-4 reveal-up"><div class="stat-card text-center"><h3 data-count="100">0</h3><p>Quality Focus</p></div></div>
+{# ============================================================ #}
+{# MISSION & VISION                                              #}
+{# ============================================================ #}
+<section class="section container">
+  <div class="section-header reveal">
+    <div class="badge">Our Purpose</div>
+    <h2 class="heading-lg">
+      Mission &<br><span class="text-gradient">Vision</span>
+    </h2>
+  </div>
+
+  <div class="mv-grid">
+    <div class="mv-card reveal reveal-delay-1">
+      <span class="mv-icon">🎯</span>
+      <h3>Our Mission</h3>
+      <p>To make pristine, mineral-rich water accessible to every Indian household through sustainable
+        sourcing, advanced purification, and reliable delivery — while protecting the ecosystems
+        that make it possible.</p>
+    </div>
+    <div class="mv-card reveal reveal-delay-2">
+      <span class="mv-icon">🌊</span>
+      <h3>Our Vision</h3>
+      <p>A future where water scarcity and quality concerns are things of the past — where every
+        person in India can open their tap and be confident in the purity of what they drink.</p>
+    </div>
   </div>
 </section>
-{% endblock content %}
+
+{# ============================================================ #}
+{# CORE VALUES                                                   #}
+{# ============================================================ #}
+<section class="section container">
+  <div class="section-header reveal">
+    <div class="badge">Core Values</div>
+    <h2 class="heading-lg">
+      What We<br><span class="text-gradient">Stand For</span>
+    </h2>
+  </div>
+
+  <div class="values-grid">
+    <div class="value-card reveal reveal-delay-1">
+      <div class="value-icon">💎</div>
+      <h4>Purity</h4>
+      <p>Uncompromising commitment to water quality. Every drop tested, every batch certified.</p>
+    </div>
+    <div class="value-card reveal reveal-delay-2">
+      <div class="value-icon">🌱</div>
+      <h4>Sustainability</h4>
+      <p>Eco-friendly packaging, responsible sourcing, and a pledge to protect our water sources.</p>
+    </div>
+    <div class="value-card reveal reveal-delay-3">
+      <div class="value-icon">🤝</div>
+      <h4>Trust</h4>
+      <p>Transparent about our processes, honest about our ingredients, accountable for our impact.</p>
+    </div>
+    <div class="value-card reveal reveal-delay-4">
+      <div class="value-icon">🚀</div>
+      <h4>Innovation</h4>
+      <p>Continuously improving our purification and delivery technology for a better experience.</p>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ #}
+{# STATS                                                         #}
+{# ============================================================ #}
+<section class="section-sm container">
+  <div class="stats-section reveal">
+    <div class="stats-grid">
+      <div class="stat-item"><strong data-counter>50,000+</strong><span>Happy Customers</span></div>
+      <div class="stat-item"><strong data-counter>99.9%</strong><span>Purity Rate</span></div>
+      <div class="stat-item"><strong data-counter>25+</strong><span>Cities Covered</span></div>
+      <div class="stat-item"><strong data-counter>200+</strong><span>Team Members</span></div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ #}
+{# TEAM                                                          #}
+{# ============================================================ #}
+<section class="section container">
+  <div class="section-header reveal">
+    <div class="badge">Our Team</div>
+    <h2 class="heading-lg">
+      The People Behind<br><span class="text-gradient">Every Drop</span>
+    </h2>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card reveal reveal-delay-1">
+      <div class="team-avatar"><span class="team-initials">AK</span></div>
+      <div class="team-info">
+        <h4>Arjun Kapoor</h4>
+        <p class="role">CEO &amp; Co-Founder</p>
+        <p>Visionary leader with 15 years in FMCG and water technology.</p>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-delay-2">
+      <div class="team-avatar"><span class="team-initials">PS</span></div>
+      <div class="team-info">
+        <h4>Priya Singh</h4>
+        <p class="role">CTO &amp; Co-Founder</p>
+        <p>Water purification expert, IIT Delhi alumna, 12 patents filed.</p>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-delay-3">
+      <div class="team-avatar"><span class="team-initials">RM</span></div>
+      <div class="team-info">
+        <h4>Rahul Mehta</h4>
+        <p class="role">Head of Operations</p>
+        <p>Built our pan-India cold-chain logistics from the ground up.</p>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-delay-4">
+      <div class="team-avatar"><span class="team-initials">SG</span></div>
+      <div class="team-info">
+        <h4>Sunita Gupta</h4>
+        <p class="role">Head of Quality</p>
+        <p>Ensures our 99.9% purity rate with 50+ quality checkpoints.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ #}
+{# CERTIFICATIONS                                                #}
+{# ============================================================ #}
+<section class="section-sm container" style="padding-bottom:120px;">
+  <div class="section-header reveal">
+    <div class="badge">Quality Assured</div>
+    <h2 class="heading-lg">
+      Certified &<br><span class="text-gradient">Trusted</span>
+    </h2>
+  </div>
+
+  <div class="cert-grid">
+    <div class="cert-card reveal reveal-delay-1">
+      <div class="cert-badge">🏅</div>
+      <h4>BIS Certified</h4>
+      <p>Bureau of Indian Standards IS:14543 compliance</p>
+    </div>
+    <div class="cert-card reveal reveal-delay-2">
+      <div class="cert-badge">🥇</div>
+      <h4>ISO 22000:2018</h4>
+      <p>International food safety management system</p>
+    </div>
+    <div class="cert-card reveal reveal-delay-3">
+      <div class="cert-badge">⭐</div>
+      <h4>FSSAI Licensed</h4>
+      <p>Food Safety and Standards Authority of India</p>
+    </div>
+    <div class="cert-card reveal reveal-delay-4">
+      <div class="cert-badge">🌿</div>
+      <h4>Eco Certified</h4>
+      <p>Carbon-neutral packaging and sustainable practices</p>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

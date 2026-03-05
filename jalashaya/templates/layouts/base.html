@@ -1,37 +1,179 @@
-{% load static i18n %}
-<!DOCTYPE html>
+{% load static i18n %}<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% block title %}Jalashaya | Premium Drinking Water{% endblock title %}</title>
-  <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-  {% block css %}{% endblock css %}
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"></script>
-  <script defer src="{% static 'js/project.js' %}"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Jalashaya – Pure Water, Pure Life. Premium drinking water delivered to your door." />
+  <title>{% block title %}Jalashaya – Pure Water, Pure Life{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/project.css' %}" />
+
+  {% block extra_css %}{% endblock %}
 </head>
 <body>
-  {% include 'includes/header.html' %}
-  <main class="site-main">
-    <div class="container pt-4">
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
-      {% endif %}
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Animated Water Background -->
+  <canvas id="water-canvas"></canvas>
+
+  <!-- ============================================================
+       NAVBAR
+  ============================================================ -->
+  <nav class="navbar" id="navbar">
+    <a href="{% url 'home' %}" class="nav-logo">
+      <div class="logo-drop"></div>
+      Jala<span>shaya</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li>
+        <a href="{% url 'home' %}"
+           {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>
+          Home
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'about' %}"
+           {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>
+          About
+        </a>
+      </li>
+      <li>
+        <a href=""
+           {% if request.resolver_match.url_name == 'products' %}class="active"{% endif %}>
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'contact' %}"
+           {% if request.resolver_match.url_name == 'contact' %}class="active"{% endif %}>
+          Contact
+        </a>
+      </li>
+      <!-- {% if user.is_authenticated %}
+        <li><a href="">Dashboard</a></li>
+        <li>
+          <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.875rem;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;padding:0;">
+              Logout
+            </button>
+          </form>
+        </li>
+      {% else %}
+        <li>
+          <a href="{% url 'account_login' %}"
+             {% if request.resolver_match.url_name == 'account_login' %}class="active"{% endif %}>
+            Login
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'account_signup' %}" class="nav-cta">Get Started</a>
+        </li>
+      {% endif %} -->
+    </ul>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ============================================================
+       DJANGO MESSAGES → Toasts
+  ============================================================ -->
+  {% if messages %}
+  <div class="messages-container">
+    {% for message in messages %}
+    <div class="message-toast {{ message.tags }}">
+      <i class="fas
+        {% if 'success' in message.tags %}fa-check-circle
+        {% elif 'error' in message.tags %}fa-exclamation-circle
+        {% elif 'warning' in message.tags %}fa-exclamation-triangle
+        {% else %}fa-info-circle{% endif %}">
+      </i>
+      {{ message }}
     </div>
-    {% block content %}{% endblock content %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main style="padding-top: var(--nav-h);">
+    {% block content %}{% endblock %}
   </main>
-  {% include 'includes/footer.html' %}
-  {% block inline_javascript %}{% endblock inline_javascript %}
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="{% url 'home' %}" class="nav-logo" style="font-size:1.6rem;">
+            <div class="logo-drop" style="width:30px;height:30px;"></div>
+            Jala<span>shaya</span>
+          </a>
+          <p>Sourced from pristine natural springs, purified with cutting-edge technology. Delivering purity in every drop across India.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="{% url 'about' %}">About Us</a>
+          <a href="#">Our Mission</a>
+          <a href="#">Sustainability</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Products</h4>
+          <a href="">Mineral Water</a>
+          <a href="">Sparkling Water</a>
+          <a href="">Alkaline Water</a>
+          <a href="">Bulk Orders</a>
+          <a href="">Subscription</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="{% url 'contact' %}">Contact Us</a>
+          <a href="#">FAQ</a>
+          <a href="#">Track Order</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; {% now "Y" %} Jalashaya. All rights reserved.</p>
+        <p>Made with <span style="color:var(--aqua)">♥</span> for pure water lovers</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Shared JS -->
+  <script src="{% static 'js/project.js' %}"></script>
+
+  {% block extra_js %}{% endblock %}
 </body>
 </html>

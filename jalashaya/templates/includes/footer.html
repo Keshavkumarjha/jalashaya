@@ -1,24 +1,48 @@
-<footer class="site-footer py-5 mt-5">
-  <div class="container">
-    <div class="row g-4">
-      <div class="col-md-5">
-        <h5>Jalashaya Premium Water</h5>
-        <p class="mb-0">Modern hydration brand with clean taste, reliable delivery, and quality-assured packaging for every customer segment.</p>
+<footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="{% url 'home' %}" class="nav-logo" style="font-size:1.6rem;">
+            <div class="logo-drop" style="width:30px;height:30px;"></div>
+            Jala<span>shaya</span>
+          </a>
+          <p>Sourced from pristine natural springs, purified with cutting-edge technology. Delivering purity in every drop across India.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="{% url 'about' %}">About Us</a>
+          <a href="#">Our Mission</a>
+          <a href="#">Sustainability</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-col">
+          <h4>Products</h4>
+          <a href="#">Mineral Water</a>
+          <a href="#">Sparkling Water</a>
+          <a href="#">Alkaline Water</a>
+          <a href="#">Bulk Orders</a>
+          <a href="#">Subscription</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="{% url 'contact' %}">Contact Us</a>
+          <a href="#">FAQ</a>
+          <a href="#">Track Order</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
       </div>
-      <div class="col-md-3">
-        <h6>Explore</h6>
-        <ul class="list-unstyled">
-          <li><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'services' %}">Products</a></li>
-          <li><a href="{% url 'about' %}">Quality Promise</a></li>
-        </ul>
-      </div>
-      <div class="col-md-4">
-        <h6>Support</h6>
-        <p class="mb-1">support@jalashaya.com</p>
-        <p class="mb-1">+91 90000 00000</p>
-        <p class="mb-0">Mon-Sat | 7:00 AM - 9:00 PM</p>
+
+      <div class="footer-bottom">
+        <p>&copy; {% now "Y" %} Jalashaya. All rights reserved.</p>
+        <p>Made with <span style="color:var(--aqua)">♥</span> for pure water lovers</p>
       </div>
     </div>
-  </div>
-</footer>
+  </footer>
