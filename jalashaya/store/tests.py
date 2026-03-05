@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Branch, Category, ContactMessage, Order, Product, State
+from .models import Branch, Category, ContactMessage, CustomerAddress, Order, Product, State
 
 
 class StoreFlowTests(TestCase):
@@ -19,42 +19,50 @@ class StoreFlowTests(TestCase):
             is_active=True,
         )
 
+    def _new_address_payload(self):
+        return {
+            "address_label": "Home",
+            "address_line_1": "12 MG Road",
+            "address_line_2": "Near Metro",
+            "landmark": "Opp Park",
+            "city": "Bengaluru",
+            "state_name": "Karnataka",
+            "postal_code": "560001",
+            "country": "India",
+        }
+
     def test_create_order_success(self):
-        response = self.client.post(
-            reverse("create_order"),
-            {
-                "product_id": str(self.product.id),
-                "customer_name": "Rahul",
-                "customer_email": "rahul@example.com",
-                "customer_mobile": "9999999999",
-                "branch": self.branch.id,
-                "quantity": 2,
-                "delivery_address": "MG Road",
-                "note": "Ring bell",
-            },
-            follow=True,
-        )
+        payload = {
+            "product_id": str(self.product.id),
+            "customer_name": "Rahul",
+            "customer_email": "rahul@example.com",
+            "customer_mobile": "9999999999",
+            "branch": self.branch.id,
+            "quantity": 2,
+            "note": "Ring bell",
+            **self._new_address_payload(),
+        }
+        response = self.client.post(reverse("create_order"), payload, follow=True)
 
         self.assertEqual(response.status_code, 200)
         order = Order.objects.get()
+        self.assertEqual(order.status, "pending")
         self.assertEqual(order.total_amount, order.subtotal + order.delivery_fee)
+        self.assertIn("560001", order.delivery_address)
         self.product.refresh_from_db()
         self.assertEqual(self.product.stock_qty, 8)
 
     def test_create_order_fails_when_insufficient_stock(self):
-        response = self.client.post(
-            reverse("create_order"),
-            {
-                "product_id": str(self.product.id),
-                "customer_name": "Rahul",
-                "customer_email": "rahul@example.com",
-                "customer_mobile": "9999999999",
-                "branch": self.branch.id,
-                "quantity": 50,
-                "delivery_address": "MG Road",
-            },
-            follow=True,
-        )
+        payload = {
+            "product_id": str(self.product.id),
+            "customer_name": "Rahul",
+            "customer_email": "rahul@example.com",
+            "customer_mobile": "9999999999",
+            "branch": self.branch.id,
+            "quantity": 50,
+            **self._new_address_payload(),
+        }
+        response = self.client.post(reverse("create_order"), payload, follow=True)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Order.objects.count(), 0)
@@ -63,8 +71,11 @@ class StoreFlowTests(TestCase):
         response = self.client.post(
             reverse("contact"),
             {
-                "name": "Asha",
+                "first_name": "Asha",
+                "last_name": "Sharma",
                 "email": "asha@example.com",
+                "phone": "9999999999",
+                "city": "Bengaluru",
                 "subject": "Bulk order",
                 "message": "Need monthly water supply",
             },
@@ -73,3 +84,60 @@ class StoreFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ContactMessage.objects.count(), 1)
+
+    def test_create_order_saves_address_when_requested(self):
+        payload = {
+            "product_id": str(self.product.id),
+            "customer_name": "Rahul",
+            "customer_email": "rahul@example.com",
+            "customer_mobile": "9999999999",
+            "branch": self.branch.id,
+            "quantity": 1,
+            "save_address": "on",
+            **self._new_address_payload(),
+        }
+        response = self.client.post(reverse("create_order"), payload, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(CustomerAddress.objects.count(), 1)
+        order = Order.objects.get()
+        self.assertIsNotNone(order.customer_address)
+
+    def test_create_order_with_selected_saved_address(self):
+        address = CustomerAddress.objects.create(
+            customer_name="Rahul",
+            customer_email="rahul@example.com",
+            customer_mobile="9999999999",
+            label="Office",
+            address_line_1="44 Residency Rd",
+            city="Bengaluru",
+            state_name="Karnataka",
+            postal_code="560025",
+            country="India",
+            is_active=True,
+        )
+        payload = {
+            "product_id": str(self.product.id),
+            "customer_name": "Rahul",
+            "customer_email": "rahul@example.com",
+            "customer_mobile": "9999999999",
+            "branch": self.branch.id,
+            "quantity": 1,
+            "selected_address": str(address.id),
+        }
+        response = self.client.post(reverse("create_order"), payload, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        order = Order.objects.get()
+        self.assertEqual(order.customer_address, address)
+        self.assertIn("560025", order.delivery_address)
+
+    def test_order_form_initializes_without_keyerror(self):
+        from .forms import OrderCreateForm
+
+        form = OrderCreateForm()
+        self.assertIn("product_id", form.fields)
+        # Regression guard for /services KeyError: 'address_label'
+        self.assertIn("address_label", form.fields)
+        self.assertIn("address_line_1", form.fields)
+        self.assertIn("selected_address", form.fields)
