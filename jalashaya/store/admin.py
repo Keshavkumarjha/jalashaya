@@ -319,8 +319,23 @@ class ContactMessageAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerAddress)
 class CustomerAddressAdmin(admin.ModelAdmin):
-    list_display = ("customer_name", "customer_email", "customer_mobile", "label", "address_line", "is_active")
-    search_fields = ("customer_name", "customer_email", "customer_mobile", "address_line")
+    list_display = (
+        "customer_name",
+        "customer_email",
+        "customer_mobile",
+        "label",
+        "full_address",
+        "is_active",
+    )
+
+    search_fields = (
+        "customer_name",
+        "customer_email",
+        "customer_mobile",
+        "address_line_1",
+        "city",
+    )
+
     list_filter = ("is_active", "created_at")
 
 
