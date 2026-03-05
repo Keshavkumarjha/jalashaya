@@ -15,4 +15,5 @@ urlpatterns = [
     # AJAX
     path("ajax/branches/", views.branches_by_state, name="branches_by_state"),
     path("ajax/product-info/", views.product_quick_info, name="product_quick_info"),
+    path("ajax/customer-addresses/", views.customer_addresses, name="customer_addresses"),
 ]
