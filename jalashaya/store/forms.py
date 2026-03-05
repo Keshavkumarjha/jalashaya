@@ -32,10 +32,6 @@ class OrderCreateForm(forms.ModelForm):
         self.fields["quantity"].widget.attrs.update({"class": "form-control", "min": 1})
         self.fields["delivery_address"].widget.attrs.update({"class": "form-control", "placeholder": "Complete delivery address"})
         self.fields["note"].widget.attrs.update({"class": "form-control", "rows": 3, "placeholder": "Any special instructions"})
-        self.fields["selected_address"].widget.attrs.update({"class": "form-control", "id": "id_selected_address"})
-        self.fields["selected_address"].choices = [("", "Select saved address")]
-        self.fields["save_address"].widget.attrs.update({"id": "id_save_address"})
-        self.fields["delivery_address"].required = False
 
     def clean(self):
         cleaned_data = super().clean()

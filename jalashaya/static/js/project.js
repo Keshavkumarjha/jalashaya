@@ -223,38 +223,6 @@ const bookingModal = document.getElementById('bookingModal');
 if (bookingModal) {
   const productIdInput = document.getElementById('bookingProductId');
   const productNameLabel = document.getElementById('bookingProductName');
-  const quantityInput = document.getElementById('id_quantity');
-  const emailInput = document.getElementById('id_customer_email');
-  const addressSelect = document.getElementById('id_selected_address');
-  const addressText = document.getElementById('id_delivery_address');
-  const savedAddressGroup = document.getElementById('savedAddressGroup');
-
-  function loadSavedAddresses() {
-    if (!emailInput || !addressSelect || !savedAddressGroup) return;
-    const email = emailInput.value.trim();
-    if (!email) return;
-
-    fetch(`/ajax/customer-addresses/?email=${encodeURIComponent(email)}`)
-      .then(res => res.json())
-      .then(data => {
-        addressSelect.innerHTML = '<option value="">Add new address</option>';
-        if (data.results && data.results.length) {
-          data.results.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.id;
-            option.textContent = `${item.label}: ${item.address}`;
-            option.dataset.address = item.address;
-            addressSelect.appendChild(option);
-          });
-          savedAddressGroup.style.display = 'block';
-        } else {
-          savedAddressGroup.style.display = 'none';
-        }
-      })
-      .catch(() => {
-        savedAddressGroup.style.display = 'none';
-      });
-  }
 
   document.querySelectorAll('.booking-trigger').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -262,30 +230,6 @@ if (bookingModal) {
       if (productNameLabel) productNameLabel.textContent = btn.dataset.productName || 'Selected product';
       bookingModal.classList.add('is-open');
       bookingModal.setAttribute('aria-hidden', 'false');
-      loadSavedAddresses();
-    });
-  });
-
-  if (emailInput) {
-    emailInput.addEventListener('blur', loadSavedAddresses);
-  }
-
-  if (addressSelect && addressText) {
-    addressSelect.addEventListener('change', () => {
-      const selectedOption = addressSelect.options[addressSelect.selectedIndex];
-      addressText.value = selectedOption && selectedOption.dataset.address ? selectedOption.dataset.address : '';
-    });
-  }
-
-  bookingModal.querySelectorAll('[data-qty-action]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!quantityInput) return;
-      const current = parseInt(quantityInput.value || '1', 10);
-      if (btn.dataset.qtyAction === 'minus') {
-        quantityInput.value = String(Math.max(1, current - 1));
-      } else {
-        quantityInput.value = String(current + 1);
-      }
     });
   });
 

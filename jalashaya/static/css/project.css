@@ -1414,23 +1414,3 @@ footer {
   max-height: 90vh;
   overflow: auto;
 }
-
-.qty-stepper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.qty-stepper input {
-  text-align: center;
-}
-
-.qty-btn {
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(0, 180, 216, 0.35);
-  border-radius: 50%;
-  background: rgba(13, 33, 55, 0.7);
-  color: var(--white);
-  cursor: pointer;
-}

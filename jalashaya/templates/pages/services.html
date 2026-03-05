@@ -95,24 +95,12 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="id_quantity">Quantity</label>
-          <div class="qty-stepper">
-            <button type="button" class="qty-btn" data-qty-action="minus" aria-label="Decrease quantity">-</button>
-            {{ order_form.quantity }}
-            <button type="button" class="qty-btn" data-qty-action="plus" aria-label="Increase quantity">+</button>
-          </div>
+          {{ order_form.quantity }}
         </div>
-      </div>
-      <div class="form-group" id="savedAddressGroup" style="display:none;">
-        <label class="form-label" for="id_selected_address">Select Saved Address</label>
-        {{ order_form.selected_address }}
       </div>
       <div class="form-group">
         <label class="form-label" for="id_delivery_address">Delivery Address</label>
         {{ order_form.delivery_address }}
-      </div>
-      <div class="check-row" style="margin-top:-0.5rem;">
-        {{ order_form.save_address }}
-        <label for="id_save_address">Save this address for next order</label>
       </div>
       <div class="form-group">
         <label class="form-label" for="id_note">Note (Optional)</label>

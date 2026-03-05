@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_http_methods
 
 from .forms import ContactMessageForm, OrderCreateForm
-from .models import Branch, Category, CustomerAddress, Product, ProductImage
+from .models import Branch, Category, Product, ProductImage
 
 
 def _get_primary_image(product: Product):
