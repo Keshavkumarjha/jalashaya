@@ -322,6 +322,31 @@ def customer_addresses(request):
 
 
 @require_GET
+def customer_addresses(request):
+    customer_email = request.GET.get("email", "").strip()
+    if not customer_email:
+        return JsonResponse({"results": []})
+
+    addresses = CustomerAddress.objects.filter(customer_email__iexact=customer_email, is_active=True).order_by("-created_at")
+    data = [
+        {
+            "id": addr.id,
+            "label": addr.label or "Saved address",
+            "address": addr.full_address,
+            "address_line_1": addr.address_line_1,
+            "address_line_2": addr.address_line_2,
+            "landmark": addr.landmark,
+            "city": addr.city,
+            "state_name": addr.state_name,
+            "postal_code": addr.postal_code,
+            "country": addr.country,
+        }
+        for addr in addresses
+    ]
+    return JsonResponse({"results": data})
+
+
+@require_GET
 def branches_by_state(request):
     state_id = request.GET.get("state_id")
     if not state_id:
