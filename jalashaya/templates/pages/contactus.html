@@ -204,24 +204,7 @@
           <label class="form-label" for="id_city">Your City</label>
           <div style="position:relative;">
             <i class="fas fa-city form-icon"></i>
-            <select id="id_city" name="city" class="form-control has-icon">
-              <option value="">Select your city</option>
-              {% for city in cities %}
-                <option value="{{ city }}" {% if form.city.value == city %}selected{% endif %}>
-                  {{ city }}
-                </option>
-              {% empty %}
-                <option>New Delhi</option>
-                <option>Mumbai</option>
-                <option>Bengaluru</option>
-                <option>Hyderabad</option>
-                <option>Chennai</option>
-                <option>Kolkata</option>
-                <option>Pune</option>
-                <option>Jaipur</option>
-                <option>Other</option>
-              {% endfor %}
-            </select>
+            
           </div>
         </div>
 
@@ -239,30 +222,7 @@
           {% endif %}
         </div>
 
-        {# Rating #}
-        <div class="form-group">
-          <label class="form-label">Rate Your Experience (Optional)</label>
-          <div class="rating-stars">
-            <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
-            <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
-            <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
-            <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
-            <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
-          </div>
-        </div>
-
-        {# File upload #}
-        <div class="form-group">
-          <label class="form-label">Attach a File (Optional)</label>
-          <label class="file-upload" for="attachment">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Drop files here or <span>click to upload</span></p>
-            <p style="font-size:0.72rem;margin-top:4px;">PNG, JPG, PDF – max 5MB</p>
-            <input type="file" id="attachment" name="attachment" accept=".png,.jpg,.jpeg,.pdf">
-          </label>
-          <div id="file-name" style="font-size:0.8rem;color:var(--aqua);margin-top:6px;"></div>
-        </div>
-
+       
         {# Consent checkbox #}
         <div class="check-row">
           <input type="checkbox" id="consent" name="consent" required>
