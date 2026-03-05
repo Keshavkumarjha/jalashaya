@@ -1,0 +1,18 @@
+{% extends 'layouts/base.html' %}
+{% block title %}{{ product.name }} | Jalashaya{% endblock title %}
+{% block content %}
+<section class="container py-5">
+  <div class="row g-4 align-items-center">
+    <div class="col-md-6 reveal-up">
+      {% if product.primary_image %}<img src="{{ product.primary_image }}" class="img-fluid rounded-4 shadow-sm" alt="{{ product.name }}">{% endif %}
+    </div>
+    <div class="col-md-6 reveal-up">
+      <small class="text-muted">{{ product.category.name }}</small>
+      <h1 class="mb-3">{{ product.name }}</h1>
+      <p>{{ product.description|default:'Premium packaged drinking water with refreshing taste.' }}</p>
+      <h4 class="text-primary mb-3">₹{{ product.price }}</h4>
+      <a href="{% url 'services' %}" class="btn btn-water rounded-pill">Order this Product</a>
+    </div>
+  </div>
+</section>
+{% endblock content %}

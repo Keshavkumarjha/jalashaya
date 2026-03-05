@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+{% block title %}{{ category.name }} | Jalashaya{% endblock title %}
+{% block content %}
+<section class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4 reveal-up">
+    <h1 class="mb-0">{{ category.name }}</h1>
+    <a href="{% url 'services' %}" class="btn btn-outline-primary rounded-pill">All Products</a>
+  </div>
+  <div class="row g-4">
+    {% for product in products %}
+      <div class="col-md-4 reveal-up">
+        <div class="card product-card border-0 shadow-sm h-100">
+          {% if product.primary_image %}<img src="{{ product.primary_image }}" class="card-img-top" alt="{{ product.name }}">{% endif %}
+          <div class="card-body">
+            <h5>{{ product.name }}</h5>
+            <p class="mb-2 text-primary fw-semibold">₹{{ product.price }}</p>
+            <a href="{% url 'product_detail' product.slug %}" class="btn btn-outline-primary btn-sm">View</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}<p>No products in this category.</p>{% endfor %}
+  </div>
+</section>
+{% endblock content %}

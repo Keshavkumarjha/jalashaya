@@ -6,39 +6,35 @@ from django.urls import include
 from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+
+from jalashaya.store import views as store_views
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
-
-from config.views import home
-
 
 admin.site.site_header = "Jalashaya – Water Supply Management"
 admin.site.site_title = "Jalashaya Admin"
 admin.site.index_title = "Operations & Data Management"
 
 urlpatterns = [
-    path("", home, name="home"),
+    path("", store_views.home, name="home"),
     path(
         "about/",
         TemplateView.as_view(template_name="pages/about.html"),
         name="about",
     ),
-    path(
-        "services/",
-        TemplateView.as_view(template_name="pages/services.html"),
-        name="services",
-    ),
+    path("services/", store_views.services, name="services"),
     path(
         "gallery/",
         TemplateView.as_view(template_name="pages/galary.html"),
         name="gallery",
     ),
-      path(
-        "contact/",
-        TemplateView.as_view(template_name="pages/contactus.html"),
-        name="contact",
-    ),
+    path("contact/", store_views.contact_page, name="contact"),
+    path("order/create/", store_views.create_order, name="create_order"),
+    path("category/<slug:slug>/", store_views.category_detail, name="category_detail"),
+    path("product/<slug:slug>/", store_views.product_detail, name="product_detail"),
+    path("ajax/branches/", store_views.branches_by_state, name="branches_by_state"),
+    path("ajax/product-info/", store_views.product_quick_info, name="product_quick_info"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
