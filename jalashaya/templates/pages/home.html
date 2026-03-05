@@ -1,59 +1,374 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
 
-{% block title %}Jalashaya | Pure Water Delivery{% endblock title %}
+{% block title %}Jalashaya – Pure Water, Pure Life{% endblock %}
 
 {% block content %}
-<!-- HERO SECTION (Updated with Bubbles) -->
-<section class="hero-section py-5 position-relative">
-  <!-- Animated Bubbles Background -->
-  <div class="bubbles-container">
-    <div class="bubble" style="left: 10%; width: 20px; height: 20px; animation-duration: 8s;"></div>
-    <div class="bubble" style="left: 30%; width: 40px; height: 40px; animation-duration: 12s;"></div>
-    <div class="bubble" style="left: 70%; width: 25px; height: 25px; animation-duration: 9s;"></div>
-    <div class="bubble" style="left: 90%; width: 50px; height: 50px; animation-duration: 15s;"></div>
+
+{# ============================================================ #}
+{# HERO                                                          #}
+{# ============================================================ #}
+<section class="hero">
+  <div class="hero-bg-orb orb-1"></div>
+  <div class="hero-bg-orb orb-2"></div>
+  <div class="hero-bg-orb orb-3"></div>
+
+  <div class="hero-content">
+    <div class="badge">✦ India's Purest Drinking Water</div>
+
+    <h1 class="heading-xl">
+      Every Drop<br>
+      <span class="text-gradient">Perfectly Pure</span>
+    </h1>
+
+    <p class="hero-sub">
+      Sourced from Himalayan springs, purified through 12-stage filtration,
+      and delivered fresh to your door. Because you deserve nothing but the best.
+    </p>
+
+    <div class="hero-actions">
+      <a href="" class="btn btn-primary">
+        <i class="fas fa-tint"></i> Explore Products
+      </a>
+      <a href="{% url 'about' %}" class="btn btn-outline">
+        Our Story <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="hero-trust">
+      <div class="hero-trust-stat">
+        <strong data-counter>50K+</strong>
+        <span>Happy Customers</span>
+      </div>
+      <div class="hero-trust-divider"></div>
+      <div class="hero-trust-stat">
+        <strong data-counter>99.9%</strong>
+        <span>Purity Rate</span>
+      </div>
+      <div class="hero-trust-divider"></div>
+      <div class="hero-trust-stat">
+        <strong data-counter>12</strong>
+        <span>Filtration Stages</span>
+      </div>
+      <div class="hero-trust-divider"></div>
+      <div class="hero-trust-stat">
+        <strong data-counter>4.9★</strong>
+        <span>Customer Rating</span>
+      </div>
+    </div>
   </div>
 
-  <div class="container py-5 position-relative z-2">
-    <div class="row align-items-center g-4">
-      <div class="col-lg-7 text-white">
-        <span class="badge rounded-pill bg-info mb-3" style="background: rgba(0, 198, 255, 0.2) !important; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px);">
-            ISO-grade water process
-        </span>
-        <h1 class="display-5 fw-bold">Premium Drinking Water for Modern Homes & Businesses</h1>
-        <p class="lead text-light-emphasis">Safe, mineral-balanced water with reliable doorstep delivery and transparent quality checks.</p>
-        <a href="{% url 'services' %}" class="btn btn-light btn-lg rounded-pill px-4 shadow-lg">
-            Explore Products <i class="fas fa-arrow-right ms-2"></i>
-        </a>
+  {# Floating SVG Bottle #}
+  <div class="hero-visual">
+    <div class="bottle-wrap">
+      <div class="bottle-ring ring-1"></div>
+      <div class="bottle-ring ring-2"></div>
+      <div class="bottle-ring ring-3"></div>
+
+      <svg class="bottle-svg" viewBox="0 0 180 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="70" y="10" width="40" height="30" rx="6" fill="url(#capG)"/>
+        <path d="M65 40 Q60 70 55 85 L55 100 L125 100 L125 85 Q120 70 115 40Z" fill="url(#neckG)" opacity="0.9"/>
+        <path d="M55 100 Q40 110 35 130 L30 300 Q28 340 45 360 L55 380 Q85 400 95 400 Q105 400 135 380 L145 360 Q162 340 160 300 L155 130 Q150 110 135 100Z" fill="url(#bodyG)"/>
+        <path d="M42 200 Q40 180 38 160 L38 300 Q36 340 53 360 L63 378 Q85 396 95 396 Q105 396 127 378 L137 360 Q154 340 152 300 L152 160 Q150 180 148 200 Q120 215 95 215 Q70 215 42 200Z" fill="url(#waterG)" opacity="0.7"/>
+        <path d="M60 120 Q58 200 60 300 Q62 330 68 350" stroke="rgba(255,255,255,0.15)" stroke-width="8" stroke-linecap="round"/>
+        <rect x="45" y="170" width="100" height="120" rx="8" fill="rgba(0,180,216,0.15)" stroke="rgba(0,180,216,0.3)" stroke-width="1"/>
+        <text x="95" y="218" text-anchor="middle" font-family="serif" font-size="18" font-weight="600" fill="rgba(255,255,255,0.9)">जल</text>
+        <text x="95" y="238" text-anchor="middle" font-family="sans-serif" font-size="8" letter-spacing="3" fill="rgba(0,180,216,0.8)">JALASHAYA</text>
+        <text x="95" y="254" text-anchor="middle" font-family="sans-serif" font-size="7" fill="rgba(122,173,204,0.7)">PURE MINERAL WATER</text>
+        <circle cx="75" cy="150" r="4" fill="rgba(0,180,216,0.3)">
+          <animate attributeName="cy" values="150;130;150" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.8;0.2;0.8" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="110" cy="160" r="3" fill="rgba(0,180,216,0.3)">
+          <animate attributeName="cy" values="160;140;160" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0.1;0.6" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <defs>
+          <linearGradient id="capG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#00b4d8"/><stop offset="100%" stop-color="#1a6fa8"/>
+          </linearGradient>
+          <linearGradient id="neckG" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(144,224,239,0.6)"/><stop offset="50%" stop-color="rgba(202,240,248,0.8)"/><stop offset="100%" stop-color="rgba(144,224,239,0.4)"/>
+          </linearGradient>
+          <linearGradient id="bodyG" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(144,224,239,0.5)"/><stop offset="40%" stop-color="rgba(202,240,248,0.85)"/><stop offset="100%" stop-color="rgba(144,224,239,0.3)"/>
+          </linearGradient>
+          <linearGradient id="waterG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(0,180,216,0.6)"/><stop offset="100%" stop-color="rgba(14,58,94,0.7)"/>
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <div class="badge-float badge-float-1">
+        <div class="dot"></div><span>12-Stage Purified</span>
+      </div>
+      <div class="badge-float badge-float-2">
+        <i class="fas fa-certificate" style="color:var(--gold)"></i><span>BIS Certified</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURED PRODUCTS (Updated) -->
-<section class="py-5 bg-light">
-  <div class="container">
-    <h2 class="section-title mb-4">Featured Products</h2>
-    <div class="row g-4">
-      {% for product in products %}
-        <div class="col-md-6 col-xl-3">
-          <div class="card h-100 product-card">
-            {% if product.primary_image %}
-              <img src="{{ product.primary_image }}" class="card-img-top" alt="{{ product.name }}">
-            {% endif %}
-            <div class="card-body">
-              <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">{{ product.category.name }}</small>
-              <h5 class="mt-2">{{ product.name }}</h5>
-              <p class="mb-2">₹{{ product.price }}</p>
-              <a href="{% url 'product_detail' product.slug %}" class="btn btn-outline-primary btn-sm rounded-pill w-100">View Details</a>
-            </div>
-          </div>
-        </div>
-      {% empty %}
-        <p class="text-muted">No products available.</p>
-      {% endfor %}
+{# ============================================================ #}
+{# MARQUEE TICKER                                                #}
+{# ============================================================ #}
+<div class="marquee-section">
+  <div class="marquee-track">
+    {% for i in "12" %}
+      <div class="marquee-item"><i class="fas fa-tint"></i> Himalayan Spring Source</div>
+      <div class="marquee-item"><i class="fas fa-shield-alt"></i> BIS Certified Quality</div>
+      <div class="marquee-item"><i class="fas fa-leaf"></i> Eco-Friendly Packaging</div>
+      <div class="marquee-item"><i class="fas fa-truck"></i> Same-Day Delivery</div>
+      <div class="marquee-item"><i class="fas fa-flask"></i> Lab Tested Pure</div>
+      <div class="marquee-item"><i class="fas fa-award"></i> ISO 22000:2018</div>
+    {% endfor %}
+  </div>
+</div>
+
+{# ============================================================ #}
+{# WHY CHOOSE US – FEATURES                                      #}
+{# ============================================================ #}
+<section class="section container">
+  <div class="section-header reveal">
+    <div class="badge">Why Jalashaya</div>
+    <h2 class="heading-lg">
+      Water That Cares<br>
+      <span class="text-gradient">For Your Health</span>
+    </h2>
+    <p class="text-muted" style="margin-top:1rem;font-size:1rem;line-height:1.7;">
+      We go beyond filtration — every bottle carries our promise of purity, taste, and your well-being.
+    </p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card reveal reveal-delay-1">
+      <div class="feature-icon"><i class="fas fa-mountain"></i></div>
+      <h3>Himalayan Source</h3>
+      <p>Our water begins its journey high in the Himalayan mountains, naturally enriched with essential minerals over thousands of years.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <div class="feature-icon"><i class="fas fa-filter"></i></div>
+      <h3>12-Stage Filtration</h3>
+      <p>Advanced reverse osmosis, UV purification, and mineral enhancement — 12 rigorous stages to guarantee crystal-clear purity in every drop.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-3">
+      <div class="feature-icon"><i class="fas fa-certificate"></i></div>
+      <h3>BIS & ISO Certified</h3>
+      <p>Every batch is independently tested and certified by BIS and ISO 22000:2018 standards. Our quality speaks for itself.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-1">
+      <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+      <h3>Eco Packaging</h3>
+      <p>100% recyclable PET bottles and biodegradable packaging. Pure water shouldn't come at the cost of our planet.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <div class="feature-icon"><i class="fas fa-truck-fast"></i></div>
+      <h3>Express Delivery</h3>
+      <p>Order by 10 AM, receive by evening. Our cold-chain logistics network ensures freshness from spring to sip.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-3">
+      <div class="feature-icon"><i class="fas fa-infinity"></i></div>
+      <h3>Subscription Plans</h3>
+      <p>Never run out of pure water. Flexible weekly, bi-weekly, or monthly subscriptions with up to 20% savings.</p>
     </div>
   </div>
 </section>
-{% endblock content %}
 
-<!-- FOOTER (Updated) -->
+{# ============================================================ #}
+{# STATS                                                         #}
+{# ============================================================ #}
+<section class="section-sm container">
+  <div class="stats-section reveal">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <strong data-counter>50,000+</strong>
+        <span>Happy Customers Served</span>
+      </div>
+      <div class="stat-item">
+        <strong data-counter>99.9%</strong>
+        <span>Purity Rate Guaranteed</span>
+      </div>
+      <div class="stat-item">
+        <strong data-counter>25+</strong>
+        <span>Cities Covered</span>
+      </div>
+      <div class="stat-item">
+        <strong data-counter>2M+</strong>
+        <span>Litres Delivered</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ #}
+{# FEATURED PRODUCTS                                             #}
+{# ============================================================ #}
+<section class="section container">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;" class="reveal">
+    <div>
+      <div class="badge">Our Range</div>
+      <h2 class="heading-lg">
+        Pure Water,<br><span class="text-gradient">Every Form</span>
+      </h2>
+    </div>
+    <a href="" class="btn btn-outline">
+      View All Products <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+
+  <div class="products-preview-grid">
+    {# -- If you have a products queryset passed from the view, use it: #}
+    {# {% for product in featured_products %} ... {% endfor %} #}
+    {# Fallback static showcase: #}
+    <div class="product-card reveal reveal-delay-1">
+      <div class="product-visual">
+        <span class="product-icon">💧</span>
+        <span class="product-tag">Best Seller</span>
+      </div>
+      <div class="product-info">
+        <h3>Himalayan Mineral Water</h3>
+        <p>Naturally enriched with 18 essential minerals. Perfect pH balance for daily hydration.</p>
+        <div class="product-footer">
+          <div class="product-price">₹40 <span>/ 1L</span></div>
+          <a href="" class="btn btn-primary btn-sm">Order Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-2">
+      <div class="product-visual">
+        <span class="product-icon">🫧</span>
+        <span class="product-tag">Premium</span>
+      </div>
+      <div class="product-info">
+        <h3>Sparkling Spring Water</h3>
+        <p>Naturally carbonated with fine micro-bubbles. The refreshing choice for connoisseurs.</p>
+        <div class="product-footer">
+          <div class="product-price">₹65 <span>/ 750ml</span></div>
+          <a href="" class="btn btn-primary btn-sm">Order Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-3">
+      <div class="product-visual">
+        <span class="product-icon">⚡</span>
+        <span class="product-tag">New</span>
+      </div>
+      <div class="product-info">
+        <h3>Alkaline Water pH 8.5+</h3>
+        <p>Ionized water with optimal alkaline pH. Supports metabolism and cellular hydration.</p>
+        <div class="product-footer">
+          <div class="product-price">₹80 <span>/ 1L</span></div>
+          <a href="" class="btn btn-primary btn-sm">Order Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ #}
+{# PROCESS TIMELINE                                              #}
+{# ============================================================ #}
+<section class="section container">
+  <div class="section-header reveal">
+    <div class="badge">Our Process</div>
+    <h2 class="heading-lg">
+      From Mountain<br><span class="text-gradient">To Your Glass</span>
+    </h2>
+    <p class="text-muted" style="margin-top:1rem;">
+      A meticulous 4-step journey to ensure you receive only the finest water.
+    </p>
+  </div>
+
+  <div class="process-timeline">
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-number">01</div>
+      <h4>Natural Sourcing</h4>
+      <p>Collected from Himalayan springs at 3,000m altitude, untouched by pollutants</p>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-number">02</div>
+      <h4>12-Stage Purification</h4>
+      <p>RO, UV, UF, and mineral enhancement for absolute purity and perfect taste</p>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-number">03</div>
+      <h4>Quality Testing</h4>
+      <p>Every batch tested in our ISO-certified lab with 50+ quality parameters</p>
+    </div>
+    <div class="process-step reveal reveal-delay-4">
+      <div class="step-number">04</div>
+      <h4>Swift Delivery</h4>
+      <p>Cold-chain logistics to preserve freshness from our facility to your door</p>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ #}
+{# TESTIMONIALS                                                  #}
+{# ============================================================ #}
+<section class="section container">
+  <div class="section-header reveal">
+    <div class="badge">Testimonials</div>
+    <h2 class="heading-lg">
+      What Our Customers<br><span class="text-gradient">Are Saying</span>
+    </h2>
+  </div>
+
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal reveal-delay-1">
+      <div class="stars">★★★★★</div>
+      <p>"I switched to Jalashaya three months ago and the difference in taste is incredible. Pure, crisp, and refreshing. My family loves it."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">P</div>
+        <div class="reviewer-info">
+          <strong>Priya Sharma</strong><span>Mumbai, Maharashtra</span>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-2">
+      <div class="stars">★★★★★</div>
+      <p>"Subscription delivery is seamless. Never missed a delivery, always on time. The alkaline water has genuinely improved my digestion."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">R</div>
+        <div class="reviewer-info">
+          <strong>Rajesh Kumar</strong><span>Delhi, NCR</span>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card reveal reveal-delay-3">
+      <div class="stars">★★★★★</div>
+      <p>"As a health-conscious person, I appreciate the transparency around their filtration process and mineral content. Top quality product."</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">A</div>
+        <div class="reviewer-info">
+          <strong>Ananya Verma</strong><span>Bengaluru, Karnataka</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ============================================================ #}
+{# CTA BAND                                                      #}
+{# ============================================================ #}
+<section class="section-sm container" style="padding-bottom:120px;">
+  <div class="cta-band reveal">
+    <div class="badge" style="margin-bottom:1.5rem;">Limited Time Offer</div>
+    <h2 class="heading-lg">
+      Start Your Pure Water<br><span class="text-gradient">Journey Today</span>
+    </h2>
+    <p>Get 20% off your first subscription order + free delivery for 3 months. No commitment required.</p>
+    <div class="btn-group">
+      <a href="{% url 'account_signup' %}" class="btn btn-primary">
+        <i class="fas fa-tint"></i> Start Free Trial
+      </a>
+      <a href="{% url 'contact' %}" class="btn btn-outline">
+        Talk to Us <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

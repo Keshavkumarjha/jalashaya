@@ -1,35 +1,376 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base.html' %}{% load static %}
 
-{% block title %}Contact | Jalashaya{% endblock title %}
+{% block title %}Contact Us – Jalashaya{% endblock %}
 
 {% block content %}
-<section class="container py-5">
-  <div class="row g-4">
-    <div class="col-lg-5">
-      <h1>Contact Jalashaya</h1>
-      <p class="text-muted">For bulk orders, recurring plans, corporate contracts, or support, send us your query.</p>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item px-0">Dedicated dispatch & route planning</li>
-        <li class="list-group-item px-0">Quality-tested source and packaging</li>
-        <li class="list-group-item px-0">Real support for urgent deliveries</li>
-      </ul>
-    </div>
-    <div class="col-lg-7">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body p-4">
-          <form method="post">
-            {% csrf_token %}
-            <div class="row g-3">
-              <div class="col-md-6">{{ form.name }}</div>
-              <div class="col-md-6">{{ form.email }}</div>
-              <div class="col-12">{{ form.subject }}</div>
-              <div class="col-12">{{ form.message }}</div>
-            </div>
-            <button class="btn btn-primary rounded-pill mt-3">Submit Request</button>
-          </form>
+
+{# ============================================================ #}
+{# PAGE HERO                                                     #}
+{# ============================================================ #}
+<section class="page-hero" style="padding-top:60px;">
+  <div class="badge">Get In Touch</div>
+  <h1 class="heading-xl">
+    We'd Love to<br><span class="text-gradient">Hear From You</span>
+  </h1>
+  <p class="page-hero-sub">
+    Questions, orders, feedback or just want to chat?
+    Our team responds within 2 hours.
+  </p>
+</section>
+
+{# ============================================================ #}
+{# CONTACT GRID                                                  #}
+{# ============================================================ #}
+<section class="section container">
+  <div class="contact-grid">
+
+    {# ── INFO SIDE ── #}
+    <div class="contact-info reveal">
+
+      <div class="info-card">
+        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="info-text">
+          <h4>Head Office</h4>
+          <p>42, Connaught Place<br>New Delhi – 110001, India</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon"><i class="fas fa-phone"></i></div>
+        <div class="info-text">
+          <h4>Phone</h4>
+          <a href="tel:+911800123456">+91 1800-123-4567</a><br>
+          <a href="tel:+911140001234" style="font-size:0.82rem">+91 11-4000-1234</a>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon"><i class="fas fa-envelope"></i></div>
+        <div class="info-text">
+          <h4>Email</h4>
+          <a href="mailto:hello@jalashaya.com">hello@jalashaya.com</a><br>
+          <a href="mailto:support@jalashaya.com" style="font-size:0.82rem">support@jalashaya.com</a>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon"><i class="fas fa-headset"></i></div>
+        <div class="info-text">
+          <h4>WhatsApp Support</h4>
+          <a href="https://wa.me/919999999999">+91 99999 99999</a>
+          <p style="font-size:0.78rem;margin-top:4px;color:var(--muted);">Quick replies in under 10 minutes</p>
+        </div>
+      </div>
+
+      <div class="hours-card">
+        <h4>Business Hours</h4>
+        <div class="hours-row">
+          <span class="day">Monday – Friday</span>
+          <span class="time">8:00 AM – 8:00 PM</span>
+        </div>
+        <div class="hours-row">
+          <span class="day">Saturday</span>
+          <span class="time">9:00 AM – 6:00 PM</span>
+        </div>
+        <div class="hours-row">
+          <span class="day">Sunday</span>
+          <span class="time closed">Closed</span>
+        </div>
+        <div class="hours-row">
+          <span class="day">Public Holidays</span>
+          <span class="time">10:00 AM – 4:00 PM</span>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">
+          Follow Us
+        </p>
+        <div class="social-row">
+          <a href="#" class="social-btn"><i class="fab fa-instagram"></i> Instagram</a>
+          <a href="#" class="social-btn"><i class="fab fa-twitter"></i> Twitter</a>
+          <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i> Facebook</a>
+          <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
         </div>
       </div>
     </div>
+
+    {# ── FORM SIDE ── #}
+    <div class="contact-form-wrap reveal reveal-delay-2">
+      <div class="form-header">
+        <h2 class="heading-md">
+          Send Us a <span class="text-gradient">Message</span>
+        </h2>
+        <p>Fill the form and our team will get back to you within 2 business hours.</p>
+      </div>
+
+      <form method="post" action="{% url 'contact' %}" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {# Non-field errors #}
+        {% if form.non_field_errors %}
+          <div class="auth-error">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ form.non_field_errors|join:", " }}
+          </div>
+        {% endif %}
+
+        {# Subject Pills #}
+        <div class="form-group">
+          <label class="form-label">What can we help with?</label>
+          <div class="subject-pills">
+            <div class="subject-pill">
+              <input type="radio" name="subject" id="sub-order" value="order" checked>
+              <label for="sub-order">🚚 Order Tracking</label>
+            </div>
+            <div class="subject-pill">
+              <input type="radio" name="subject" id="sub-product" value="product">
+              <label for="sub-product">💧 Product Inquiry</label>
+            </div>
+            <div class="subject-pill">
+              <input type="radio" name="subject" id="sub-bulk" value="bulk">
+              <label for="sub-bulk">📦 Bulk Order</label>
+            </div>
+            <div class="subject-pill">
+              <input type="radio" name="subject" id="sub-quality" value="quality">
+              <label for="sub-quality">⚗️ Quality Issue</label>
+            </div>
+            <div class="subject-pill">
+              <input type="radio" name="subject" id="sub-other" value="other">
+              <label for="sub-other">💬 Other</label>
+            </div>
+          </div>
+        </div>
+
+        {# Name row #}
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="id_first_name">First Name</label>
+            <div style="position:relative;">
+              <i class="fas fa-user form-icon"></i>
+              <input type="text" id="id_first_name" name="first_name"
+                     class="form-control has-icon {% if form.first_name.errors %}is-invalid{% endif %}"
+                     placeholder="Arjun"
+                     value="{{ form.first_name.value|default:'' }}" required>
+            </div>
+            {% if form.first_name.errors %}
+              <div class="form-error">{{ form.first_name.errors|join:", " }}</div>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="id_last_name">Last Name</label>
+            <div style="position:relative;">
+              <i class="fas fa-user form-icon"></i>
+              <input type="text" id="id_last_name" name="last_name"
+                     class="form-control has-icon {% if form.last_name.errors %}is-invalid{% endif %}"
+                     placeholder="Kumar"
+                     value="{{ form.last_name.value|default:'' }}" required>
+            </div>
+            {% if form.last_name.errors %}
+              <div class="form-error">{{ form.last_name.errors|join:", " }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        {# Email + Phone #}
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="id_email">Email Address</label>
+            <div style="position:relative;">
+              <i class="fas fa-envelope form-icon"></i>
+              <input type="email" id="id_email" name="email"
+                     class="form-control has-icon {% if form.email.errors %}is-invalid{% endif %}"
+                     placeholder="you@example.com"
+                     value="{{ form.email.value|default:'' }}" required>
+            </div>
+            {% if form.email.errors %}
+              <div class="form-error">{{ form.email.errors|join:", " }}</div>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="id_phone">Phone Number</label>
+            <div style="position:relative;">
+              <i class="fas fa-phone form-icon"></i>
+              <input type="tel" id="id_phone" name="phone"
+                     class="form-control has-icon"
+                     placeholder="+91 98765 43210"
+                     value="{{ form.phone.value|default:'' }}">
+            </div>
+          </div>
+        </div>
+
+        {# City #}
+        <div class="form-group">
+          <label class="form-label" for="id_city">Your City</label>
+          <div style="position:relative;">
+            <i class="fas fa-city form-icon"></i>
+            <select id="id_city" name="city" class="form-control has-icon">
+              <option value="">Select your city</option>
+              {% for city in cities %}
+                <option value="{{ city }}" {% if form.city.value == city %}selected{% endif %}>
+                  {{ city }}
+                </option>
+              {% empty %}
+                <option>New Delhi</option>
+                <option>Mumbai</option>
+                <option>Bengaluru</option>
+                <option>Hyderabad</option>
+                <option>Chennai</option>
+                <option>Kolkata</option>
+                <option>Pune</option>
+                <option>Jaipur</option>
+                <option>Other</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        {# Message #}
+        <div class="form-group">
+          <label class="form-label" for="id_message">Your Message</label>
+          <div style="position:relative;">
+            <i class="fas fa-comment form-icon form-icon-top"></i>
+            <textarea id="id_message" name="message"
+                      class="form-control has-icon {% if form.message.errors %}is-invalid{% endif %}"
+                      placeholder="Tell us how we can help you…" required>{{ form.message.value|default:'' }}</textarea>
+          </div>
+          {% if form.message.errors %}
+            <div class="form-error">{{ form.message.errors|join:", " }}</div>
+          {% endif %}
+        </div>
+
+        {# Rating #}
+        <div class="form-group">
+          <label class="form-label">Rate Your Experience (Optional)</label>
+          <div class="rating-stars">
+            <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+            <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+            <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+            <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+            <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
+          </div>
+        </div>
+
+        {# File upload #}
+        <div class="form-group">
+          <label class="form-label">Attach a File (Optional)</label>
+          <label class="file-upload" for="attachment">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Drop files here or <span>click to upload</span></p>
+            <p style="font-size:0.72rem;margin-top:4px;">PNG, JPG, PDF – max 5MB</p>
+            <input type="file" id="attachment" name="attachment" accept=".png,.jpg,.jpeg,.pdf">
+          </label>
+          <div id="file-name" style="font-size:0.8rem;color:var(--aqua);margin-top:6px;"></div>
+        </div>
+
+        {# Consent checkbox #}
+        <div class="check-row">
+          <input type="checkbox" id="consent" name="consent" required>
+          <label for="consent">
+            I agree to Jalashaya's
+            <a href="#">Privacy Policy</a>
+            and consent to being contacted regarding my inquiry.
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-submit">
+          <i class="fas fa-paper-plane"></i> Send Message
+        </button>
+
+        <div class="form-secure">
+          <i class="fas fa-lock"></i>
+          Your information is encrypted and never shared with third parties.
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {# Map placeholder #}
+  <div class="map-section reveal" style="margin-top:4rem;">
+    <div class="map-pin">📍</div>
+    <h3>Visit Our Office</h3>
+    <p>42, Connaught Place, New Delhi – 110001</p>
+    <a href="https://maps.google.com" target="_blank" rel="noopener"
+       class="btn btn-outline" style="margin-top:1rem;">
+      <i class="fas fa-directions"></i> Get Directions
+    </a>
   </div>
 </section>
-{% endblock content %}
+
+{# ============================================================ #}
+{# FAQ                                                           #}
+{# ============================================================ #}
+<section class="section container" style="padding-bottom:120px;">
+  <div class="section-header reveal">
+    <div class="badge">FAQ</div>
+    <h2 class="heading-lg">
+      Frequently Asked<br><span class="text-gradient">Questions</span>
+    </h2>
+  </div>
+
+  <div class="faq-list" style="max-width:760px;margin:0 auto;">
+
+    <div class="faq-item reveal">
+      <button class="faq-trigger">
+        How do I track my order? <i class="fas fa-plus"></i>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">
+          Log into your account dashboard and click "Track Order". You'll receive
+          real-time SMS and email updates as your order progresses.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-1">
+      <button class="faq-trigger">
+        What is your delivery timeframe? <i class="fas fa-plus"></i>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">
+          Orders placed before 10 AM are delivered same day. After 10 AM, next morning.
+          Subscription orders follow your preferred delivery slot.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-2">
+      <button class="faq-trigger">
+        Can I customize my subscription plan? <i class="fas fa-plus"></i>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">
+          Yes! Choose weekly, bi-weekly, or monthly schedules. Pause, skip, or cancel
+          anytime with no fees. Mix and match different product types.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-3">
+      <button class="faq-trigger">
+        How do you ensure water quality? <i class="fas fa-plus"></i>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">
+          Every batch undergoes 50+ quality checks in our ISO 22000:2018 certified lab.
+          We test for 200+ parameters including microbiological, chemical, and physical properties.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item reveal reveal-delay-4">
+      <button class="faq-trigger">
+        Do you offer bulk orders for businesses? <i class="fas fa-plus"></i>
+      </button>
+      <div class="faq-body">
+        <div class="faq-body-inner">
+          Yes. Special bulk pricing for offices, restaurants, hotels and events.
+          Email bulk@jalashaya.com or select "Bulk Order" above for a custom quote.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
