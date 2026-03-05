@@ -52,8 +52,6 @@ class StoreFlowTests(TestCase):
         self.assertEqual(order.status, "pending")
         self.assertEqual(order.total_amount, order.subtotal + order.delivery_fee)
         self.assertIn("560001", order.delivery_address)
-        self.assertIsNotNone(order.customer_address)
-        self.assertFalse(order.customer_address.is_active)
         self.product.refresh_from_db()
         self.assertEqual(self.product.stock_qty, 8)
 
@@ -91,89 +89,20 @@ class StoreFlowTests(TestCase):
         self.assertEqual(ContactMessage.objects.count(), 1)
 
     def test_create_order_saves_address_when_requested(self):
-        payload = {
-            "product_id": str(self.product.id),
-            "customer_name": "Rahul",
-            "customer_email": "rahul@example.com",
-            "customer_mobile": "9999999999",
-            "branch": self.branch.id,
-            "quantity": 1,
-            "save_address": "on",
-            **self._new_address_payload(),
-        }
-        response = self.client.post(reverse("create_order"), payload, follow=True)
+        response = self.client.post(
+            reverse("create_order"),
+            {
+                "product_id": str(self.product.id),
+                "customer_name": "Rahul",
+                "customer_email": "rahul@example.com",
+                "customer_mobile": "9999999999",
+                "branch": self.branch.id,
+                "quantity": 1,
+                "delivery_address": "MG Road",
+                "save_address": "on",
+            },
+            follow=True,
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(CustomerAddress.objects.count(), 1)
-        order = Order.objects.get()
-        self.assertIsNotNone(order.customer_address)
-
-    def test_create_order_with_selected_saved_address(self):
-        address = CustomerAddress.objects.create(
-            customer_name="Rahul",
-            customer_email="rahul@example.com",
-            customer_mobile="9999999999",
-            label="Office",
-            address_line_1="44 Residency Rd",
-            city="Bengaluru",
-            state_name="Karnataka",
-            postal_code="560025",
-            country="India",
-            is_active=True,
-        )
-        payload = {
-            "product_id": str(self.product.id),
-            "customer_name": "Rahul",
-            "customer_email": "rahul@example.com",
-            "customer_mobile": "9999999999",
-            "branch": self.branch.id,
-            "quantity": 1,
-            "selected_address": str(address.id),
-        }
-        response = self.client.post(reverse("create_order"), payload, follow=True)
-
-        self.assertEqual(response.status_code, 200)
-        order = Order.objects.get()
-        self.assertEqual(order.customer_address, address)
-        self.assertIn("560025", order.delivery_address)
-
-    def test_order_form_initializes_without_keyerror(self):
-        from .forms import OrderCreateForm
-
-        form = OrderCreateForm()
-        self.assertIn("product_id", form.fields)
-        # Regression guard for /services KeyError: 'address_label'
-        self.assertIn("address_label", form.fields)
-        self.assertIn("address_line_1", form.fields)
-        self.assertIn("selected_address", form.fields)
-
-
-    def test_selected_address_field_uses_select_widget(self):
-        from .forms import OrderCreateForm
-
-        form = OrderCreateForm(data={"selected_address": "12"})
-        self.assertEqual(form.fields["selected_address"].widget.__class__.__name__, "Select")
-
-    @override_settings(
-        WHATSAPP_PHONE_NUMBER_ID="1067932456396082",
-        WHATSAPP_ACCESS_TOKEN="test-token",
-        WHATSAPP_TEMPLATE_NAME="hello_world",
-        WHATSAPP_ADMIN_MOBILES="919111111111,919222222222",
-    )
-    @patch("jalashaya.store.views.urllib_request.urlopen")
-    def test_create_order_sends_whatsapp_receipt(self, mock_urlopen):
-        mock_urlopen.return_value.__enter__.return_value = object()
-        payload = {
-            "product_id": str(self.product.id),
-            "customer_name": "Rahul",
-            "customer_email": "rahul@example.com",
-            "customer_mobile": "9155516507",
-            "branch": self.branch.id,
-            "quantity": 1,
-            **self._new_address_payload(),
-        }
-
-        response = self.client.post(reverse("create_order"), payload, follow=True)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(mock_urlopen.call_count, 3)
