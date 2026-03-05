@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_http_methods
 
 from .forms import ContactMessageForm, OrderCreateForm
-from .models import Branch, Category, CustomerAddress, Product, ProductImage
+from .models import Branch, Category, Product, ProductImage
 
 
 def _get_primary_image(product: Product):
@@ -148,25 +148,6 @@ def create_order(request):
     qty = form.cleaned_data["quantity"]
     subtotal, delivery_fee, total = _calc_totals(product, qty)
 
-    chosen_address = form.cleaned_data.get("chosen_address")
-    resolved_delivery_address = form.cleaned_data["resolved_delivery_address"]
-
-    if not chosen_address and form.cleaned_data.get("save_address"):
-        chosen_address = CustomerAddress.objects.create(
-            customer_name=form.cleaned_data["customer_name"],
-            customer_email=form.cleaned_data["customer_email"],
-            customer_mobile=form.cleaned_data["customer_mobile"],
-            label=(form.cleaned_data.get("address_label") or "Saved Address").strip() or "Saved Address",
-            address_line_1=form.cleaned_data["address_line_1"],
-            address_line_2=form.cleaned_data.get("address_line_2"),
-            landmark=form.cleaned_data.get("landmark"),
-            city=form.cleaned_data["city"],
-            state_name=form.cleaned_data["state_name"],
-            postal_code=form.cleaned_data["postal_code"],
-            country=form.cleaned_data["country"],
-            is_active=True,
-        )
-
     order = OrderCreateForm.Meta.model.objects.create(
         customer_name=form.cleaned_data["customer_name"],
         customer_email=form.cleaned_data["customer_email"],
@@ -183,10 +164,25 @@ def create_order(request):
         status="pending",
     )
 
+    if form.cleaned_data.get("save_address"):
+        CustomerAddress.objects.get_or_create(
+            customer_email=form.cleaned_data["customer_email"],
+            address_line=form.cleaned_data["delivery_address"],
+            defaults={
+                "customer_name": form.cleaned_data["customer_name"],
+                "customer_mobile": form.cleaned_data["customer_mobile"],
+                "label": "Saved Address",
+                "is_active": True,
+            },
+        )
+
     if product.track_inventory:
         Product.objects.filter(id=product.id).update(stock_qty=F("stock_qty") - qty)
 
-    messages.success(request, f"Order created successfully! Current status: {order.get_status_display()}.")
+    messages.success(
+        request,
+        f"Order created successfully! Current status: {order.get_status_display()}.",
+    )
     return redirect(reverse("services"))
 
 
@@ -198,18 +194,7 @@ def customer_addresses(request):
 
     addresses = CustomerAddress.objects.filter(customer_email__iexact=customer_email, is_active=True).order_by("-created_at")
     data = [
-        {
-            "id": addr.id,
-            "label": addr.label or "Saved address",
-            "address": addr.full_address,
-            "address_line_1": addr.address_line_1,
-            "address_line_2": addr.address_line_2,
-            "landmark": addr.landmark,
-            "city": addr.city,
-            "state_name": addr.state_name,
-            "postal_code": addr.postal_code,
-            "country": addr.country,
-        }
+        {"id": addr.id, "label": addr.label or "Saved address", "address": addr.address_line}
         for addr in addresses
     ]
     return JsonResponse({"results": data})

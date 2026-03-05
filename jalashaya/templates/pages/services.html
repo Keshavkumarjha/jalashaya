@@ -41,7 +41,12 @@
           </div>
           <div class="prod-footer">
             <div><span class="prod-price">₹{{ product.price }} <span>/ unit</span></span></div>
-            <button class="btn-cart booking-trigger" type="button" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}" data-product-price="{{ product.price }}">
+            <button
+              class="btn-cart booking-trigger"
+              type="button"
+              data-product-id="{{ product.id }}"
+              data-product-name="{{ product.name }}"
+            >
               <i class="fas fa-shopping-cart"></i> Book Now
             </button>
           </div>
@@ -59,13 +64,13 @@
     <div class="form-header" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;">
       <div>
         <h2 class="heading-md">Book Product</h2>
-        <p>Complete all details, then confirm in summary popup.</p>
+        <p>Complete this form to confirm your order.</p>
         <p><strong id="bookingProductName">Selected product</strong></p>
       </div>
       <button type="button" class="prod-wishlist" aria-label="Close" data-close-booking><i class="fas fa-times"></i></button>
     </div>
 
-    <form method="post" action="{% url 'create_order' %}" id="bookingForm">
+    <form method="post" action="{% url 'create_order' %}">
       {% csrf_token %}
       <input type="hidden" name="product_id" id="bookingProductId" required>
 
@@ -90,88 +95,20 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="id_quantity">Quantity</label>
-          <div class="qty-stepper">
-            <button type="button" class="qty-btn" data-qty-action="minus" aria-label="Decrease quantity">-</button>
-            {{ order_form.quantity }}
-            <button type="button" class="qty-btn" data-qty-action="plus" aria-label="Increase quantity">+</button>
-          </div>
+          {{ order_form.quantity }}
         </div>
       </div>
-
-      <div class="form-group" id="savedAddressGroup" style="display:none;">
-        <label class="form-label" for="id_selected_address">Select Saved Address</label>
-        {{ order_form.selected_address }}
+      <div class="form-group">
+        <label class="form-label" for="id_delivery_address">Delivery Address</label>
+        {{ order_form.delivery_address }}
       </div>
-
-      <div class="address-box">
-        <h4 class="address-title">Add New Address</h4>
-        <div class="form-group">
-          <label class="form-label" for="id_address_label">Address Label</label>
-          {{ order_form.address_label }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="id_address_line_1">Address Line 1</label>
-          {{ order_form.address_line_1 }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="id_address_line_2">Address Line 2</label>
-          {{ order_form.address_line_2 }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="id_landmark">Landmark</label>
-          {{ order_form.landmark }}
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="id_city">City</label>
-            {{ order_form.city }}
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="id_state_name">State</label>
-            {{ order_form.state_name }}
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="id_postal_code">PIN Code</label>
-            {{ order_form.postal_code }}
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="id_country">Country</label>
-            {{ order_form.country }}
-          </div>
-        </div>
-      </div>
-
-      {{ order_form.delivery_address }}
-
-      <div class="check-row" style="margin-top:0.5rem;">
-        {{ order_form.save_address }}
-        <label for="id_save_address">Save this address for next order</label>
-      </div>
-
       <div class="form-group">
         <label class="form-label" for="id_note">Note (Optional)</label>
         {{ order_form.note }}
       </div>
 
-      <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-paper-plane"></i> Review Order Summary</button>
+      <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-paper-plane"></i> Submit Booking</button>
     </form>
-  </div>
-</div>
-
-<div class="booking-modal" id="orderSummaryModal" aria-hidden="true">
-  <div class="booking-modal__backdrop" data-close-summary></div>
-  <div class="booking-modal__dialog contact-form-wrap">
-    <div class="form-header" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;">
-      <h2 class="heading-md">Order Summary</h2>
-      <button type="button" class="prod-wishlist" aria-label="Close" data-close-summary><i class="fas fa-times"></i></button>
-    </div>
-    <div class="summary-grid" id="orderSummaryContent"></div>
-    <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1.5rem;">
-      <button type="button" class="btn btn-outline" data-close-summary>Edit Details</button>
-      <button type="button" class="btn btn-primary" id="confirmOrderSubmit">Submit Order</button>
-    </div>
   </div>
 </div>
 {% endblock %}
