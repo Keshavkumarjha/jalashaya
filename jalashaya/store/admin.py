@@ -12,6 +12,7 @@ from .models import (
     ProductImage,
     Order,
     ContactMessage,
+    CustomerAddress,
 )
 
 # -------------------------------------------------
@@ -312,6 +313,13 @@ class ContactMessageAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False  # only from site form
+
+
+@admin.register(CustomerAddress)
+class CustomerAddressAdmin(admin.ModelAdmin):
+    list_display = ("customer_name", "customer_email", "customer_mobile", "label", "address_line", "is_active")
+    search_fields = ("customer_name", "customer_email", "customer_mobile", "address_line")
+    list_filter = ("is_active", "created_at")
 
 
 # -------------------------------------------------

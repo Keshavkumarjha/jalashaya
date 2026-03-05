@@ -1,11 +1,13 @@
 from django import forms
 from django.core.validators import MinValueValidator
 
-from .models import Branch, ContactMessage, Order, Product
+from .models import Branch, ContactMessage, CustomerAddress, Order, Product
 
 
 class OrderCreateForm(forms.ModelForm):
     product_id = forms.UUIDField(widget=forms.HiddenInput())
+    selected_address = forms.ChoiceField(required=False)
+    save_address = forms.BooleanField(required=False)
     quantity = forms.IntegerField(min_value=1, validators=[MinValueValidator(1)])
 
     class Meta:
@@ -35,6 +37,9 @@ class OrderCreateForm(forms.ModelForm):
         cleaned_data = super().clean()
         product_id = cleaned_data.get("product_id")
         qty = cleaned_data.get("quantity") or 1
+        selected_address = cleaned_data.get("selected_address")
+        delivery_address = (cleaned_data.get("delivery_address") or "").strip()
+        customer_email = cleaned_data.get("customer_email")
 
         if not product_id:
             raise forms.ValidationError("Please select a product.")
@@ -46,6 +51,23 @@ class OrderCreateForm(forms.ModelForm):
 
         if product.track_inventory and product.stock_qty < qty:
             raise forms.ValidationError("Not enough stock available for this product.")
+
+        if selected_address:
+            if not str(selected_address).isdigit():
+                raise forms.ValidationError("Please select a valid saved address.")
+            try:
+                saved_address = CustomerAddress.objects.get(
+                    id=int(selected_address),
+                    is_active=True,
+                    customer_email__iexact=customer_email,
+                )
+            except CustomerAddress.DoesNotExist as exc:
+                raise forms.ValidationError("Saved address not found.") from exc
+            cleaned_data["delivery_address"] = saved_address.address_line
+        elif delivery_address:
+            cleaned_data["delivery_address"] = delivery_address
+        else:
+            raise forms.ValidationError("Please add delivery address.")
 
         cleaned_data["product"] = product
         return cleaned_data
