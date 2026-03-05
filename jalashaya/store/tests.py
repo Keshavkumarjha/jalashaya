@@ -63,8 +63,11 @@ class StoreFlowTests(TestCase):
         response = self.client.post(
             reverse("contact"),
             {
-                "name": "Asha",
+                "first_name": "Asha",
+                "last_name": "Sharma",
                 "email": "asha@example.com",
+                "phone": "9999999999",
+                "city": "Bengaluru",
                 "subject": "Bulk order",
                 "message": "Need monthly water supply",
             },

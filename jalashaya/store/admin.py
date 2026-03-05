@@ -293,15 +293,15 @@ class OrderAdmin(admin.ModelAdmin):
 # -------------------------------------------------
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "short_subject", "created_at")
-    search_fields = ("name", "email", "subject", "message")
+    list_display = ("first_name", "last_name", "email", "short_subject", "created_at")
+    search_fields = ("first_name", "last_name", "email", "phone", "city", "subject", "message")
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
 
-    readonly_fields = ("name", "email", "subject", "message", "created_at", "updated_at")
+    readonly_fields = ("first_name", "last_name", "email", "phone", "city", "subject", "message", "created_at", "updated_at")
 
     fieldsets = (
-        ("Sender Info", {"fields": ("name", "email")}),
+        ("Sender Info", {"fields": ("first_name", "last_name", "email", "phone", "city")}),
         ("Message", {"fields": ("subject", "message")}),
         ("Audit", {"fields": ("created_at", "updated_at")}),
     )
