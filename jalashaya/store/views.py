@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_http_methods
 
 from .forms import ContactMessageForm, OrderCreateForm
-from .models import Branch, Category, Product, ProductImage, State
+from .models import Branch, Category, CustomerAddress, Product, ProductImage
 
 
 def _get_primary_image(product: Product):
@@ -36,7 +36,7 @@ def home(request):
         Product.objects.filter(is_active=True)
         .select_related("category")
         .prefetch_related(
-            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all")
+            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all"),
         )
         .order_by("sort_order", "-created_at")[:8]
     )
@@ -57,7 +57,7 @@ def services(request):
         Product.objects.filter(is_active=True, category__is_active=True)
         .select_related("category")
         .prefetch_related(
-            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all")
+            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all"),
         )
         .order_by("sort_order", "-created_at")
     )
@@ -91,7 +91,7 @@ def category_detail(request, slug):
         Product.objects.filter(is_active=True, category=category)
         .select_related("category")
         .prefetch_related(
-            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all")
+            Prefetch("images", queryset=ProductImage.objects.order_by("-is_primary", "id"), to_attr="images_all"),
         )
         .order_by("sort_order", "-created_at")
     )
@@ -112,7 +112,6 @@ def product_detail(request, slug):
 
 @require_http_methods(["GET", "POST"])
 def contact_page(request):
-    states = State.objects.filter(is_active=True).order_by("name")
     form = ContactMessageForm(request.POST or None)
 
     if request.method == "POST":
@@ -122,7 +121,18 @@ def contact_page(request):
             return redirect(reverse("contact"))
         messages.error(request, "Please correct the errors below and submit again.")
 
-    return render(request, "pages/contactus.html", {"states": states, "form": form})
+    return render(request, "pages/contactus.html", {"form": form})
+
+
+@require_http_methods(["POST"])
+def contact_submit(request):
+    form = ContactMessageForm(request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Thanks! We received your message.")
+    else:
+        messages.error(request, "Please correct the errors below and submit again.")
+    return redirect(reverse("contact"))
 
 
 @require_http_methods(["POST"])
@@ -138,14 +148,34 @@ def create_order(request):
     qty = form.cleaned_data["quantity"]
     subtotal, delivery_fee, total = _calc_totals(product, qty)
 
-    OrderCreateForm.Meta.model.objects.create(
+    chosen_address = form.cleaned_data.get("chosen_address")
+    resolved_delivery_address = form.cleaned_data["resolved_delivery_address"]
+
+    if not chosen_address and form.cleaned_data.get("save_address"):
+        chosen_address = CustomerAddress.objects.create(
+            customer_name=form.cleaned_data["customer_name"],
+            customer_email=form.cleaned_data["customer_email"],
+            customer_mobile=form.cleaned_data["customer_mobile"],
+            label=(form.cleaned_data.get("address_label") or "Saved Address").strip() or "Saved Address",
+            address_line_1=form.cleaned_data["address_line_1"],
+            address_line_2=form.cleaned_data.get("address_line_2"),
+            landmark=form.cleaned_data.get("landmark"),
+            city=form.cleaned_data["city"],
+            state_name=form.cleaned_data["state_name"],
+            postal_code=form.cleaned_data["postal_code"],
+            country=form.cleaned_data["country"],
+            is_active=True,
+        )
+
+    order = OrderCreateForm.Meta.model.objects.create(
         customer_name=form.cleaned_data["customer_name"],
         customer_email=form.cleaned_data["customer_email"],
         customer_mobile=form.cleaned_data["customer_mobile"],
         product=product,
         branch=form.cleaned_data["branch"],
+        customer_address=chosen_address,
         quantity=qty,
-        delivery_address=form.cleaned_data["delivery_address"],
+        delivery_address=resolved_delivery_address[:255],
         note=form.cleaned_data["note"],
         subtotal=subtotal,
         delivery_fee=delivery_fee,
@@ -156,8 +186,33 @@ def create_order(request):
     if product.track_inventory:
         Product.objects.filter(id=product.id).update(stock_qty=F("stock_qty") - qty)
 
-    messages.success(request, "Order placed successfully! Our team will call you shortly.")
+    messages.success(request, f"Order created successfully! Current status: {order.get_status_display()}.")
     return redirect(reverse("services"))
+
+
+@require_GET
+def customer_addresses(request):
+    customer_email = request.GET.get("email", "").strip()
+    if not customer_email:
+        return JsonResponse({"results": []})
+
+    addresses = CustomerAddress.objects.filter(customer_email__iexact=customer_email, is_active=True).order_by("-created_at")
+    data = [
+        {
+            "id": addr.id,
+            "label": addr.label or "Saved address",
+            "address": addr.full_address,
+            "address_line_1": addr.address_line_1,
+            "address_line_2": addr.address_line_2,
+            "landmark": addr.landmark,
+            "city": addr.city,
+            "state_name": addr.state_name,
+            "postal_code": addr.postal_code,
+            "country": addr.country,
+        }
+        for addr in addresses
+    ]
+    return JsonResponse({"results": data})
 
 
 @require_GET
@@ -188,5 +243,5 @@ def product_quick_info(request):
             "track_inventory": product.track_inventory,
             "stock_qty": product.stock_qty,
             "image_url": image,
-        }
+        },
     )

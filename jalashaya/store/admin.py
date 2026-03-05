@@ -12,6 +12,7 @@ from .models import (
     ProductImage,
     Order,
     ContactMessage,
+    CustomerAddress,
 )
 
 # -------------------------------------------------
@@ -188,6 +189,7 @@ class OrderAdmin(admin.ModelAdmin):
         "product",
         "branch",
         "quantity",
+        "customer_address",
         "formatted_total",
         "status_badge",
         "created_at",
@@ -198,7 +200,7 @@ class OrderAdmin(admin.ModelAdmin):
     autocomplete_fields = ("product", "branch")
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
-    list_select_related = ("product", "branch")
+    list_select_related = ("product", "branch", "customer_address")
 
     readonly_fields = (
         "subtotal",
@@ -214,6 +216,7 @@ class OrderAdmin(admin.ModelAdmin):
                 "customer_name",
                 "customer_email",
                 "customer_mobile",
+                "customer_address",
                 "delivery_address",
                 "note",
             )
@@ -293,15 +296,15 @@ class OrderAdmin(admin.ModelAdmin):
 # -------------------------------------------------
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "short_subject", "created_at")
-    search_fields = ("name", "email", "subject", "message")
+    list_display = ("first_name", "last_name", "email", "short_subject", "created_at")
+    search_fields = ("first_name", "last_name", "email", "phone", "city", "subject", "message")
     date_hierarchy = "created_at"
     ordering = ("-created_at",)
 
-    readonly_fields = ("name", "email", "subject", "message", "created_at", "updated_at")
+    readonly_fields = ("first_name", "last_name", "email", "phone", "city", "subject", "message", "created_at", "updated_at")
 
     fieldsets = (
-        ("Sender Info", {"fields": ("name", "email")}),
+        ("Sender Info", {"fields": ("first_name", "last_name", "email", "phone", "city")}),
         ("Message", {"fields": ("subject", "message")}),
         ("Audit", {"fields": ("created_at", "updated_at")}),
     )
@@ -312,6 +315,19 @@ class ContactMessageAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False  # only from site form
+
+
+@admin.register(CustomerAddress)
+class CustomerAddressAdmin(admin.ModelAdmin):
+    list_display = ("customer_name", "customer_email", "customer_mobile", "label", "city", "state_name", "postal_code", "is_active")
+    search_fields = ("customer_name", "customer_email", "customer_mobile", "address_line_1", "address_line_2", "city", "postal_code")
+    list_filter = ("is_active", "city", "state_name", "created_at")
+    fieldsets = (
+        ("Customer", {"fields": ("customer_name", "customer_email", "customer_mobile", "label", "is_active")}),
+        ("Address", {"fields": ("address_line_1", "address_line_2", "landmark", "city", "state_name", "postal_code", "country")}),
+        ("Audit", {"fields": ("created_at", "updated_at")}),
+    )
+    readonly_fields = ("created_at", "updated_at")
 
 
 # -------------------------------------------------
