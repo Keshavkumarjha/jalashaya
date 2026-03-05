@@ -3,20 +3,20 @@
    ================================================================ */
 
 /* ── Cursor ─────────────────────────────────────────────────── */
-const dot  = document.getElementById('cursorDot');
+const dot = document.getElementById('cursorDot');
 const ring = document.getElementById('cursorRing');
 if (dot && ring) {
   let rx = 0, ry = 0, dx = 0, dy = 0;
   document.addEventListener('mousemove', e => {
     dx = e.clientX; dy = e.clientY;
     dot.style.left = dx + 'px';
-    dot.style.top  = dy + 'px';
+    dot.style.top = dy + 'px';
   });
   (function animRing() {
     rx += (dx - rx) * 0.15;
     ry += (dy - ry) * 0.15;
     ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
+    ring.style.top = ry + 'px';
     requestAnimationFrame(animRing);
   })();
   document.querySelectorAll('a, button, .btn, input, textarea, select, .feature-card, .prod-card, .product-card').forEach(el => {
@@ -32,15 +32,15 @@ if (navbar) {
 }
 
 /* ── Mobile menu ─────────────────────────────────────────────── */
-const toggle   = document.getElementById('navToggle');
+const toggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
 if (toggle && navLinks) {
   toggle.addEventListener('click', () => {
     navLinks.classList.toggle('open');
     const spans = toggle.querySelectorAll('span');
-    const open  = navLinks.classList.contains('open');
-    spans[0].style.transform = open ? 'rotate(45deg) translate(5px,5px)'  : '';
-    spans[1].style.transform = open ? 'scaleX(0)'                          : '';
+    const open = navLinks.classList.contains('open');
+    spans[0].style.transform = open ? 'rotate(45deg) translate(5px,5px)' : '';
+    spans[1].style.transform = open ? 'scaleX(0)' : '';
     spans[2].style.transform = open ? 'rotate(-45deg) translate(5px,-5px)' : '';
   });
 }
@@ -65,8 +65,8 @@ if (canvas) {
     ctx.clearRect(0, 0, W, H);
     for (let i = 0; i < 5; i++) {
       ctx.beginPath();
-      const amp   = 25 + i * 8;
-      const freq  = 0.006 - i * 0.0005;
+      const amp = 25 + i * 8;
+      const freq = 0.006 - i * 0.0005;
       const speed = 0.3 + i * 0.1;
       const yBase = H * (0.3 + i * 0.15);
       ctx.moveTo(0, yBase);
@@ -101,7 +101,7 @@ setTimeout(() => {
 /* ── FAQ accordion ───────────────────────────────────────────── */
 document.querySelectorAll('.faq-trigger').forEach(btn => {
   btn.addEventListener('click', () => {
-    const item   = btn.closest('.faq-item');
+    const item = btn.closest('.faq-item');
     const isOpen = item.classList.contains('open');
     document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
     if (!isOpen) item.classList.add('open');
@@ -114,7 +114,7 @@ document.querySelectorAll('[data-pw-toggle]').forEach(btn => {
     const target = document.getElementById(btn.dataset.pwToggle);
     if (!target) return;
     const isText = target.type === 'text';
-    target.type  = isText ? 'password' : 'text';
+    target.type = isText ? 'password' : 'text';
     btn.innerHTML = isText ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
   });
 });
@@ -122,7 +122,7 @@ document.querySelectorAll('[data-pw-toggle]').forEach(btn => {
 /* ── Password strength ───────────────────────────────────────── */
 const pw1 = document.getElementById('id_password1');
 if (pw1) {
-  const segs  = [1, 2, 3, 4].map(i => document.getElementById('seg' + i));
+  const segs = [1, 2, 3, 4].map(i => document.getElementById('seg' + i));
   const label = document.getElementById('strengthText');
   const levels = [
     { color: '#ff6b6b', text: 'Too short' },
@@ -133,10 +133,10 @@ if (pw1) {
   ];
   function calcStrength(pw) {
     let s = 0;
-    if (pw.length >= 8)  s++;
+    if (pw.length >= 8) s++;
     if (pw.length >= 12) s++;
     if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) s++;
-    if (/[0-9]/.test(pw))    s++;
+    if (/[0-9]/.test(pw)) s++;
     if (/[^A-Za-z0-9]/.test(pw)) s++;
     return Math.min(s, 4);
   }
@@ -154,13 +154,13 @@ document.querySelectorAll('[data-counter]').forEach(el => {
   const obs = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      const raw    = el.textContent;
-      const num    = parseFloat(raw.replace(/[^0-9.]/g, ''));
+      const raw = el.textContent;
+      const num = parseFloat(raw.replace(/[^0-9.]/g, ''));
       const suffix = raw.replace(/[\d.,]/g, '').trim();
-      let start    = null;
-      const step   = ts => {
+      let start = null;
+      const step = ts => {
         if (!start) start = ts;
-        const p    = Math.min((ts - start) / 2000, 1);
+        const p = Math.min((ts - start) / 2000, 1);
         const ease = 1 - Math.pow(1 - p, 3);
         el.textContent = (ease * num).toFixed(num < 10 ? 1 : 0) + suffix;
         if (p < 1) requestAnimationFrame(step); else el.textContent = raw;
@@ -181,15 +181,15 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
     document.querySelectorAll('.prod-card[data-cat]').forEach(card => {
       const show = filter === 'all' || card.dataset.cat === filter;
       card.style.transition = 'all 0.4s cubic-bezier(0.23,1,0.32,1)';
-      card.style.opacity        = show ? '1' : '0.2';
-      card.style.transform      = show ? ''  : 'scale(0.95)';
-      card.style.pointerEvents  = show ? ''  : 'none';
+      card.style.opacity = show ? '1' : '0.2';
+      card.style.transform = show ? '' : 'scale(0.95)';
+      card.style.pointerEvents = show ? '' : 'none';
     });
   });
 });
 
 /* ── Add to cart feedback ────────────────────────────────────── */
-window.addToCart = function(btn) {
+window.addToCart = function (btn) {
   btn.classList.add('added');
   btn.innerHTML = '<i class="fas fa-check"></i> Added!';
   setTimeout(() => {
@@ -199,20 +199,20 @@ window.addToCart = function(btn) {
 };
 
 /* ── Wishlist toggle ─────────────────────────────────────────── */
-window.toggleWishlist = function(btn) { btn.classList.toggle('active'); };
+window.toggleWishlist = function (btn) { btn.classList.toggle('active'); };
 
 /* ── File upload display ─────────────────────────────────────── */
 const fileInput = document.getElementById('attachment');
 const fileLabel = document.getElementById('file-name');
 if (fileInput && fileLabel) {
-  fileInput.addEventListener('change', function() {
+  fileInput.addEventListener('change', function () {
     if (this.files[0]) fileLabel.textContent = '📎 ' + this.files[0].name;
   });
 }
 
 /* ── Form submit spinner ─────────────────────────────────────── */
 document.querySelectorAll('form').forEach(form => {
-  form.addEventListener('submit', function() {
+  form.addEventListener('submit', function () {
     const btn = this.querySelector('.btn-submit');
     if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…'; btn.style.pointerEvents = 'none'; }
   });
@@ -240,3 +240,36 @@ if (bookingModal) {
     });
   });
 }
+
+
+
+const emailField = document.getElementById("id_customer_email")
+const addressDropdown = document.getElementById("id_selected_address")
+
+emailField.addEventListener("blur", function () {
+
+  const email = emailField.value
+
+  if (!email) return
+
+  fetch(`/customer-addresses/?email=${email}`)
+    .then(res => res.json())
+    .then(data => {
+
+      addressDropdown.innerHTML = '<option value="">Add New Address</option>'
+
+      data.results.forEach(addr => {
+
+        const option = document.createElement("option")
+
+        option.value = addr.id
+        option.textContent = `${addr.label} - ${addr.address}`
+
+        addressDropdown.appendChild(option)
+
+      })
+
+    })
+
+})
+

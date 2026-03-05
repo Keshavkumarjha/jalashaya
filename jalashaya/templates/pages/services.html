@@ -70,45 +70,115 @@
       <button type="button" class="prod-wishlist" aria-label="Close" data-close-booking><i class="fas fa-times"></i></button>
     </div>
 
-    <form method="post" action="{% url 'create_order' %}">
-      {% csrf_token %}
-      <input type="hidden" name="product_id" id="bookingProductId" required>
+  <form method="post" action="{% url 'create_order' %}">
+{% csrf_token %}
 
-      <div class="form-group">
-        <label class="form-label" for="id_customer_name">Full Name</label>
-        {{ order_form.customer_name }}
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="id_customer_email">Email</label>
-          {{ order_form.customer_email }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="id_customer_mobile">Mobile</label>
-          {{ order_form.customer_mobile }}
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="id_branch">Branch</label>
-          {{ order_form.branch }}
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="id_quantity">Quantity</label>
-          {{ order_form.quantity }}
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="id_delivery_address">Delivery Address</label>
-        {{ order_form.delivery_address }}
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="id_note">Note (Optional)</label>
-        {{ order_form.note }}
-      </div>
+<input type="hidden" name="product_id" id="bookingProductId" required>
 
-      <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-paper-plane"></i> Submit Booking</button>
-    </form>
+<div class="form-group">
+<label class="form-label">Full Name</label>
+{{ order_form.customer_name }}
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Email</label>
+{{ order_form.customer_email }}
+</div>
+
+<div class="form-group">
+<label class="form-label">Mobile</label>
+{{ order_form.customer_mobile }}
+</div>
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label class="form-label">Branch</label>
+{{ order_form.branch }}
+</div>
+
+<div class="form-group">
+<label class="form-label">Quantity</label>
+{{ order_form.quantity }}
+</div>
+</div>
+
+<hr>
+
+<h4>Select Delivery Address</h4>
+
+<div class="form-group">
+<label>Saved Addresses</label>
+<select name="selected_address" id="id_selected_address" class="form-control">
+<option value="">Add New Address</option>
+</select>
+</div>
+
+<h4>New Address</h4>
+
+<div class="form-group">
+<label>Label</label>
+{{ order_form.label }}
+</div>
+
+<div class="form-group">
+<label>Address Line 1</label>
+{{ order_form.address_line_1 }}
+</div>
+
+<div class="form-group">
+<label>Address Line 2</label>
+{{ order_form.address_line_2 }}
+</div>
+
+<div class="form-group">
+<label>Landmark</label>
+{{ order_form.landmark }}
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label>City</label>
+{{ order_form.city }}
+</div>
+
+<div class="form-group">
+<label>State</label>
+{{ order_form.state_name }}
+</div>
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label>PIN Code</label>
+{{ order_form.postal_code }}
+</div>
+
+<div class="form-group">
+<label>Country</label>
+{{ order_form.country }}
+</div>
+</div>
+
+<div class="form-group">
+<label>
+{{ order_form.save_address }} Save this address for future orders
+</label>
+</div>
+
+{{ order_form.delivery_address }}
+
+<div class="form-group">
+<label>Note</label>
+{{ order_form.note }}
+</div>
+
+<button type="submit" class="btn btn-primary btn-submit">
+Submit Booking
+</button>
+
+</form>
   </div>
 </div>
 {% endblock %}
