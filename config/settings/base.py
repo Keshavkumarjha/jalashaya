@@ -242,6 +242,12 @@ EMAIL_BACKEND = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 5
 
+# WhatsApp Cloud API
+WHATSAPP_PHONE_NUMBER_ID = env("WHATSAPP_PHONE_NUMBER_ID", default="")
+WHATSAPP_ACCESS_TOKEN = env("WHATSAPP_ACCESS_TOKEN", default="")
+WHATSAPP_TEMPLATE_NAME = env("WHATSAPP_TEMPLATE_NAME", default="hello_world")
+WHATSAPP_ADMIN_MOBILES = env("WHATSAPP_ADMIN_MOBILES", default="")
+
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
