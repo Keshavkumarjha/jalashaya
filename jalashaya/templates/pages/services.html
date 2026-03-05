@@ -1,326 +1,126 @@
-{% extends 'layouts/base.html' %}{% load static %}
+{% extends 'layouts/base.html' %}
 
-{% block title %}Our Products – Jalashaya{% endblock %}
+{% block title %}Our Services – Jalashaya{% endblock %}
 
 {% block content %}
-
-{# ============================================================ #}
-{# PAGE HERO                                                     #}
-{# ============================================================ #}
 <section class="page-hero" style="padding-top:60px;">
-  <div class="badge">Our Collection</div>
-  <h1 class="heading-xl">
-    Pure Water,<br><span class="text-gradient">Every Form</span>
-  </h1>
-  <p class="page-hero-sub">
-    From classic mineral to premium alkaline — find the perfect water for your lifestyle and needs.
-  </p>
+  <div class="badge">Our Services</div>
+  <h1 class="heading-xl">Choose Your <span class="text-gradient">Water Product</span></h1>
+  <p class="page-hero-sub">Browse all available products and click <strong>Book Now</strong> to place your order instantly.</p>
 </section>
 
-{# ============================================================ #}
-{# FILTER TABS                                                   #}
-{# ============================================================ #}
 <section class="container" style="padding-bottom:0; padding-top:20px;">
   <div class="filter-tabs reveal">
     <button class="filter-tab active" data-filter="all">All Products</button>
-    <button class="filter-tab" data-filter="mineral">Mineral</button>
-    <button class="filter-tab" data-filter="sparkling">Sparkling</button>
-    <button class="filter-tab" data-filter="alkaline">Alkaline</button>
-    <button class="filter-tab" data-filter="kids">Kids</button>
-    <button class="filter-tab" data-filter="bulk">Bulk</button>
+    {% for category in categories %}
+      <button class="filter-tab" data-filter="{{ category.slug }}">{{ category.name }}</button>
+    {% endfor %}
   </div>
 </section>
 
-{# ============================================================ #}
-{# PRODUCTS GRID                                                 #}
-{# ============================================================ #}
 <section class="section-sm container">
   <div class="full-products-grid">
-
-    {# — If you have a products queryset from the view, render dynamically: #}
-    {# {% for product in products %} #}
-    {# <div class="prod-card" data-cat="{{ product.category }}"> ... </div> #}
-    {# {% endfor %} #}
-
-    {# Mineral Water #}
-    <div class="prod-card reveal reveal-delay-1" data-cat="mineral">
-      <div class="prod-visual v-mineral">
-        <div class="bg-glow"></div>
-        <div class="prod-icon">💧</div>
-        <div class="prod-tags"><span class="prod-tag tag-popular">Best Seller</span></div>
-        <button class="prod-wishlist" onclick="toggleWishlist(this)"><i class="fas fa-heart"></i></button>
-      </div>
-      <div class="prod-info">
-        <div class="prod-category">Mineral Water</div>
-        <h3>Himalayan Mineral Water</h3>
-        <p>Naturally sourced from 3,000m altitude springs. Enriched with 18 essential minerals.</p>
-        <div class="prod-specs">
-          <div class="prod-spec"><i class="fas fa-tint"></i> pH 7.4</div>
-          <div class="prod-spec"><i class="fas fa-flask"></i> 18 Minerals</div>
-          <div class="prod-spec"><i class="fas fa-certificate"></i> BIS Certified</div>
+    {% for product in products %}
+      <article class="prod-card reveal" data-cat="{{ product.category.slug }}">
+        <div class="prod-visual v-mineral">
+          <div class="bg-glow"></div>
+          <div class="prod-icon">💧</div>
+          {% if product.badge_text %}
+            <div class="prod-tags"><span class="prod-tag tag-popular">{{ product.badge_text }}</span></div>
+          {% endif %}
         </div>
-        <div class="prod-footer">
-          <div><span class="prod-price-old">₹50</span><span class="prod-price">₹40 <span>/ 1L</span></span></div>
-          <button class="btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Book Now</button>
+        <div class="prod-info">
+          <div class="prod-category">{{ product.category.name }}</div>
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description|default:"Premium purified water for healthy daily hydration." }}</p>
+          <div class="prod-specs">
+            <div class="prod-spec"><i class="fas fa-box"></i> SKU: {{ product.sku }}</div>
+            {% if product.track_inventory %}
+              <div class="prod-spec"><i class="fas fa-cubes"></i> Stock: {{ product.stock_qty }}</div>
+            {% endif %}
+          </div>
+          <div class="prod-footer">
+            <div><span class="prod-price">₹{{ product.price }} <span>/ unit</span></span></div>
+            <button
+              class="btn-cart booking-trigger"
+              type="button"
+              data-product-id="{{ product.id }}"
+              data-product-name="{{ product.name }}"
+            >
+              <i class="fas fa-shopping-cart"></i> Book Now
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
-
-    {# Sparkling Water #}
-    <div class="prod-card reveal reveal-delay-2" data-cat="sparkling">
-      <div class="prod-visual v-sparkling">
-        <div class="bg-glow"></div>
-        <div class="prod-icon">🫧</div>
-        <div class="prod-tags"><span class="prod-tag tag-hot">Premium</span></div>
-        <button class="prod-wishlist" onclick="toggleWishlist(this)"><i class="fas fa-heart"></i></button>
-      </div>
-      <div class="prod-info">
-        <div class="prod-category">Sparkling Water</div>
-        <h3>Sparkling Spring Water</h3>
-        <p>Fine natural carbonation for a crisp, effervescent experience. Perfect with meals.</p>
-        <div class="prod-specs">
-          <div class="prod-spec"><i class="fas fa-tint"></i> Carbonated</div>
-          <div class="prod-spec"><i class="fas fa-glass-water"></i> 750ml</div>
-          <div class="prod-spec"><i class="fas fa-leaf"></i> Natural</div>
-        </div>
-        <div class="prod-footer">
-          <div><span class="prod-price">₹65 <span>/ 750ml</span></span></div>
-          <button class="btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Book Now</button>
-        </div>
-      </div>
-    </div>
-
-    {# Alkaline Water #}
-    <div class="prod-card reveal reveal-delay-3" data-cat="alkaline">
-      <div class="prod-visual v-alkaline">
-        <div class="bg-glow"></div>
-        <div class="prod-icon">⚡</div>
-        <div class="prod-tags"><span class="prod-tag tag-new">New</span></div>
-        <button class="prod-wishlist" onclick="toggleWishlist(this)"><i class="fas fa-heart"></i></button>
-      </div>
-      <div class="prod-info">
-        <div class="prod-category">Alkaline Water</div>
-        <h3>Alkaline Water pH 8.5+</h3>
-        <p>Ionized water with optimal alkaline balance. Supports metabolism and cellular hydration.</p>
-        <div class="prod-specs">
-          <div class="prod-spec"><i class="fas fa-tint"></i> pH 8.5+</div>
-          <div class="prod-spec"><i class="fas fa-bolt"></i> Ionized</div>
-          <div class="prod-spec"><i class="fas fa-heart"></i> Wellness</div>
-        </div>
-        <div class="prod-footer">
-          <div><span class="prod-price">₹80 <span>/ 1L</span></span></div>
-          <button class="btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Book Now</button>
-        </div>
-      </div>
-    </div>
-
-    {# Kids Water #}
-    <div class="prod-card reveal reveal-delay-1" data-cat="kids">
-      <div class="prod-visual v-kids">
-        <div class="bg-glow"></div>
-        <div class="prod-icon">🌈</div>
-        <div class="prod-tags"><span class="prod-tag tag-popular">Kids</span></div>
-        <button class="prod-wishlist" onclick="toggleWishlist(this)"><i class="fas fa-heart"></i></button>
-      </div>
-      <div class="prod-info">
-        <div class="prod-category">Kids Water</div>
-        <h3>Junior Pure Water</h3>
-        <p>Specially formulated for children's developing bodies with gentle mineral balance.</p>
-        <div class="prod-specs">
-          <div class="prod-spec"><i class="fas fa-tint"></i> pH 7.2</div>
-          <div class="prod-spec"><i class="fas fa-child"></i> Kid-Safe</div>
-          <div class="prod-spec"><i class="fas fa-certificate"></i> Certified</div>
-        </div>
-        <div class="prod-footer">
-          <div><span class="prod-price">₹35 <span>/ 500ml</span></span></div>
-          <button class="btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Book Now</button>
-        </div>
-      </div>
-    </div>
-
-    {# Bulk Can #}
-    <div class="prod-card reveal reveal-delay-2" data-cat="bulk">
-      <div class="prod-visual v-bulk">
-        <div class="bg-glow"></div>
-        <div class="prod-icon">🫙</div>
-        <div class="prod-tags"><span class="prod-tag tag-promo">Save 30%</span></div>
-        <button class="prod-wishlist" onclick="toggleWishlist(this)"><i class="fas fa-heart"></i></button>
-      </div>
-      <div class="prod-info">
-        <div class="prod-category">Bulk / Office</div>
-        <h3>20L Bulk Water Can</h3>
-        <p>Ideal for offices, restaurants, and events. Dispenser-compatible reusable can.</p>
-        <div class="prod-specs">
-          <div class="prod-spec"><i class="fas fa-tint"></i> 20 Litres</div>
-          <div class="prod-spec"><i class="fas fa-recycle"></i> Reusable</div>
-          <div class="prod-spec"><i class="fas fa-building"></i> Commercial</div>
-        </div>
-        <div class="prod-footer">
-          <div><span class="prod-price-old">₹200</span><span class="prod-price">₹140 <span>/ can</span></span></div>
-          <button class="btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Book Now</button>
-        </div>
-      </div>
-    </div>
-
-    {# Flavored Water #}
-    <div class="prod-card reveal reveal-delay-3" data-cat="mineral">
-      <div class="prod-visual v-flavored">
-        <div class="bg-glow"></div>
-        <div class="prod-icon">🍋</div>
-        <div class="prod-tags"><span class="prod-tag tag-new">New Flavor</span></div>
-        <button class="prod-wishlist" onclick="toggleWishlist(this)"><i class="fas fa-heart"></i></button>
-      </div>
-      <div class="prod-info">
-        <div class="prod-category">Flavored Water</div>
-        <h3>Citrus Infused Water</h3>
-        <p>Pure mineral water lightly infused with natural citrus. Zero sugar, zero calories.</p>
-        <div class="prod-specs">
-          <div class="prod-spec"><i class="fas fa-lemon"></i> Natural</div>
-          <div class="prod-spec"><i class="fas fa-times-circle"></i> Zero Sugar</div>
-          <div class="prod-spec"><i class="fas fa-tint"></i> Infused</div>
-        </div>
-        <div class="prod-footer">
-          <div><span class="prod-price">₹55 <span>/ 500ml</span></span></div>
-          <button class="btn-cart" onclick="addToCart(this)"><i class="fas fa-shopping-cart"></i> Book Now</button>
-        </div>
-      </div>
-    </div>
-
+      </article>
+    {% empty %}
+      <p class="text-center" style="grid-column:1 / -1;">No products available at the moment.</p>
+    {% endfor %}
   </div>
 </section>
 
-{# ============================================================ #}
-{# COMPARISON TABLE                                              #}
-{# ============================================================ #}
-<section class="section container">
-  <div class="section-header reveal">
-    <div class="badge">Compare</div>
-    <h2 class="heading-lg">
-      Find Your<br><span class="text-gradient">Perfect Match</span>
-    </h2>
-  </div>
-
-  <div style="overflow-x:auto;" class="reveal">
-    <table class="compare-table">
-      <thead>
-        <tr>
-          <th style="text-align:left;">Feature</th>
-          <th>Mineral</th>
-          <th>Sparkling</th>
-          <th>Alkaline</th>
-          <th>Kids</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Natural Source</td>
-          <td><i class="fas fa-check check"></i></td>
-          <td><i class="fas fa-check check"></i></td>
-          <td><i class="fas fa-check check"></i></td>
-          <td><i class="fas fa-check check"></i></td>
-        </tr>
-        <tr class="highlight">
-          <td>Carbonation</td>
-          <td><i class="fas fa-times cross"></i></td>
-          <td><i class="fas fa-check check"></i></td>
-          <td><i class="fas fa-times cross"></i></td>
-          <td><i class="fas fa-times cross"></i></td>
-        </tr>
-        <tr>
-          <td>pH Level</td>
-          <td>7.4</td><td>5.5–6</td><td>8.5+</td><td>7.2</td>
-        </tr>
-        <tr class="highlight">
-          <td>Added Minerals</td>
-          <td><i class="fas fa-check check"></i></td>
-          <td><i class="fas fa-times cross"></i></td>
-          <td><i class="fas fa-check check"></i></td>
-          <td>Gentle</td>
-        </tr>
-        <tr>
-          <td>Ideal For</td>
-          <td>Daily use</td><td>Dining</td><td>Wellness</td><td>Children</td>
-        </tr>
-        <tr class="highlight">
-          <td>BIS Certified</td>
-          <td><i class="fas fa-check check"></i></td>
-          <td><i class="fas fa-check check"></i></td>
-          <td><i class="fas fa-check check"></i></td>
-          <td><i class="fas fa-check check"></i></td>
-        </tr>
-        <tr>
-          <td>Price per Litre</td>
-          <td>₹40</td><td>₹87</td><td>₹80</td><td>₹70</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-{# ============================================================ #}
-{# SUBSCRIPTION PLANS                                            #}
-{# ============================================================ #}
-<!-- <section class="section container" style="padding-bottom:120px;">
-  <div class="section-header reveal">
-    <div class="badge">Save More</div>
-    <h2 class="heading-lg">
-      Subscribe &<br><span class="text-gradient">Save Up to 30%</span>
-    </h2>
-    <p class="text-muted" style="margin-top:1rem;">
-      Flexible plans. Cancel anytime. No hidden fees.
-    </p>
-  </div>
-
-  <div class="subscription-grid">
-    <div class="sub-card reveal reveal-delay-1">
-      <div class="sub-icon">💧</div>
-      <h3>Essential</h3>
-      <div class="sub-price">₹299 <span>/ month</span></div>
-      <ul class="sub-features">
-        <li><i class="fas fa-check"></i> 30L Mineral Water</li>
-        <li><i class="fas fa-check"></i> Weekly delivery</li>
-        <li><i class="fas fa-check"></i> 10% discount</li>
-        <li><i class="fas fa-check"></i> Free delivery</li>
-        <li><i class="fas fa-times" style="color:rgba(255,100,100,0.5)"></i> Priority support</li>
-      </ul>
-      <a href="{% url 'account_signup' %}" class="btn btn-outline" style="width:100%;justify-content:center;">
-        Get Started
-      </a>
+<div class="booking-modal" id="bookingModal" aria-hidden="true">
+  <div class="booking-modal__backdrop" data-close-booking></div>
+  <div class="booking-modal__dialog contact-form-wrap">
+    <div class="form-header" style="display:flex;justify-content:space-between;align-items:center;gap:1rem;">
+      <div>
+        <h2 class="heading-md">Book Product</h2>
+        <p>Complete this form to confirm your order.</p>
+        <p><strong id="bookingProductName">Selected product</strong></p>
+      </div>
+      <button type="button" class="prod-wishlist" aria-label="Close" data-close-booking><i class="fas fa-times"></i></button>
     </div>
 
-    <div class="sub-card featured reveal reveal-delay-2">
-      <div class="sub-popular-badge">Popular</div>
-      <div class="sub-icon">🌊</div>
-      <h3>Premium</h3>
-      <div class="sub-price">₹599 <span>/ month</span></div>
-      <ul class="sub-features">
-        <li><i class="fas fa-check"></i> 60L Any Water Type</li>
-        <li><i class="fas fa-check"></i> Bi-weekly delivery</li>
-        <li><i class="fas fa-check"></i> 20% discount</li>
-        <li><i class="fas fa-check"></i> Free delivery</li>
-        <li><i class="fas fa-check"></i> Priority support</li>
-      </ul>
-      <a href="{% url 'account_signup' %}" class="btn btn-primary" style="width:100%;justify-content:center;">
-        Get Started
-      </a>
-    </div>
+    <form method="post" action="{% url 'create_order' %}">
+      {% csrf_token %}
+      <input type="hidden" name="product_id" id="bookingProductId" required>
 
-    <div class="sub-card reveal reveal-delay-3">
-      <div class="sub-icon">🏆</div>
-      <h3>Ultimate</h3>
-      <div class="sub-price">₹999 <span>/ month</span></div>
-      <ul class="sub-features">
-        <li><i class="fas fa-check"></i> Unlimited Orders</li>
-        <li><i class="fas fa-check"></i> Daily delivery option</li>
-        <li><i class="fas fa-check"></i> 30% discount</li>
-        <li><i class="fas fa-check"></i> Free delivery</li>
-        <li><i class="fas fa-check"></i> Dedicated manager</li>
-      </ul>
-      <a href="{% url 'account_signup' %}" class="btn btn-outline" style="width:100%;justify-content:center;">
-        Get Started
-      </a>
-    </div>
+      <div class="form-group">
+        <label class="form-label" for="id_customer_name">Full Name</label>
+        {{ order_form.customer_name }}
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="id_customer_email">Email</label>
+          {{ order_form.customer_email }}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="id_customer_mobile">Mobile</label>
+          {{ order_form.customer_mobile }}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="id_branch">Branch</label>
+          {{ order_form.branch }}
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="id_quantity">Quantity</label>
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn" data-qty-action="minus" aria-label="Decrease quantity">-</button>
+            {{ order_form.quantity }}
+            <button type="button" class="qty-btn" data-qty-action="plus" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" id="savedAddressGroup" style="display:none;">
+        <label class="form-label" for="id_selected_address">Select Saved Address</label>
+        {{ order_form.selected_address }}
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="id_delivery_address">Delivery Address</label>
+        {{ order_form.delivery_address }}
+      </div>
+      <div class="check-row" style="margin-top:-0.5rem;">
+        {{ order_form.save_address }}
+        <label for="id_save_address">Save this address for next order</label>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="id_note">Note (Optional)</label>
+        {{ order_form.note }}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-submit"><i class="fas fa-paper-plane"></i> Submit Booking</button>
+    </form>
   </div>
-</section> -->
-
+</div>
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Branch, Category, ContactMessage, Order, Product, State
+from .models import Branch, Category, ContactMessage, CustomerAddress, Order, Product, State
 
 
 class StoreFlowTests(TestCase):
@@ -37,6 +37,7 @@ class StoreFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         order = Order.objects.get()
+        self.assertEqual(order.status, "pending")
         self.assertEqual(order.total_amount, order.subtotal + order.delivery_fee)
         self.product.refresh_from_db()
         self.assertEqual(self.product.stock_qty, 8)
@@ -63,8 +64,11 @@ class StoreFlowTests(TestCase):
         response = self.client.post(
             reverse("contact"),
             {
-                "name": "Asha",
+                "first_name": "Asha",
+                "last_name": "Sharma",
                 "email": "asha@example.com",
+                "phone": "9999999999",
+                "city": "Bengaluru",
                 "subject": "Bulk order",
                 "message": "Need monthly water supply",
             },
@@ -73,3 +77,22 @@ class StoreFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ContactMessage.objects.count(), 1)
+
+    def test_create_order_saves_address_when_requested(self):
+        response = self.client.post(
+            reverse("create_order"),
+            {
+                "product_id": str(self.product.id),
+                "customer_name": "Rahul",
+                "customer_email": "rahul@example.com",
+                "customer_mobile": "9999999999",
+                "branch": self.branch.id,
+                "quantity": 1,
+                "delivery_address": "MG Road",
+                "save_address": "on",
+            },
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(CustomerAddress.objects.count(), 1)

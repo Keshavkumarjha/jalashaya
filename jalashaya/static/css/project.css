@@ -1391,3 +1391,46 @@ footer {
   .compare-table { font-size:0.75rem; }
   .compare-table th, .compare-table td { padding:0.65rem 0.7rem; }
 }
+.booking-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+  padding: 1.5rem;
+}
+.booking-modal.is-open { display: flex; }
+.booking-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 17, 31, 0.8);
+}
+.booking-modal__dialog {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.qty-stepper input {
+  text-align: center;
+}
+
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(0, 180, 216, 0.35);
+  border-radius: 50%;
+  background: rgba(13, 33, 55, 0.7);
+  color: var(--white);
+  cursor: pointer;
+}

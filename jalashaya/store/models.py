@@ -157,10 +157,30 @@ class Order(TimeStampedModel):
             models.Index(fields=["status", "created_at"]),
         ]
 class ContactMessage(TimeStampedModel):
-    name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     email = models.EmailField(db_index=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=120, blank=True, null=True)
     subject = models.CharField(max_length=200)
     message = models.TextField()
 
     class Meta:
         ordering = ["-created_at"]
+
+
+class CustomerAddress(ActiveModel, TimeStampedModel):
+    customer_name = models.CharField(max_length=200)
+    customer_email = models.EmailField(db_index=True)
+    customer_mobile = models.CharField(max_length=20, blank=True, null=True)
+    label = models.CharField(max_length=80, blank=True, null=True)
+    address_line = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["customer_email", "is_active"]),
+        ]
+
+    def __str__(self):
+        return f"{self.customer_name} - {self.address_line[:40]}"
