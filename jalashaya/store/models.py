@@ -157,8 +157,11 @@ class Order(TimeStampedModel):
             models.Index(fields=["status", "created_at"]),
         ]
 class ContactMessage(TimeStampedModel):
-    name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     email = models.EmailField(db_index=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=120, blank=True, null=True)
     subject = models.CharField(max_length=200)
     message = models.TextField()
 

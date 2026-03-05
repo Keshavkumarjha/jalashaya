@@ -217,3 +217,26 @@ document.querySelectorAll('form').forEach(form => {
     if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…'; btn.style.pointerEvents = 'none'; }
   });
 });
+
+/* ── Booking modal ───────────────────────────────────────────── */
+const bookingModal = document.getElementById('bookingModal');
+if (bookingModal) {
+  const productIdInput = document.getElementById('bookingProductId');
+  const productNameLabel = document.getElementById('bookingProductName');
+
+  document.querySelectorAll('.booking-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (productIdInput) productIdInput.value = btn.dataset.productId || '';
+      if (productNameLabel) productNameLabel.textContent = btn.dataset.productName || 'Selected product';
+      bookingModal.classList.add('is-open');
+      bookingModal.setAttribute('aria-hidden', 'false');
+    });
+  });
+
+  bookingModal.querySelectorAll('[data-close-booking]').forEach(el => {
+    el.addEventListener('click', () => {
+      bookingModal.classList.remove('is-open');
+      bookingModal.setAttribute('aria-hidden', 'true');
+    });
+  });
+}

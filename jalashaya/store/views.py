@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_http_methods
 
 from .forms import ContactMessageForm, OrderCreateForm
-from .models import Branch, Category, Product, ProductImage, State
+from .models import Branch, Category, Product, ProductImage
 
 
 def _get_primary_image(product: Product):
@@ -112,7 +112,6 @@ def product_detail(request, slug):
 
 @require_http_methods(["GET", "POST"])
 def contact_page(request):
-    states = State.objects.filter(is_active=True).order_by("name")
     form = ContactMessageForm(request.POST or None)
 
     if request.method == "POST":
@@ -122,7 +121,18 @@ def contact_page(request):
             return redirect(reverse("contact"))
         messages.error(request, "Please correct the errors below and submit again.")
 
-    return render(request, "pages/contactus.html", {"states": states, "form": form})
+    return render(request, "pages/contactus.html", {"form": form})
+
+
+@require_http_methods(["POST"])
+def contact_submit(request):
+    form = ContactMessageForm(request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Thanks! We received your message.")
+    else:
+        messages.error(request, "Please correct the errors below and submit again.")
+    return redirect(reverse("contact"))
 
 
 @require_http_methods(["POST"])
