@@ -319,15 +319,9 @@ class ContactMessageAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerAddress)
 class CustomerAddressAdmin(admin.ModelAdmin):
-    list_display = ("customer_name", "customer_email", "customer_mobile", "label", "city", "state_name", "postal_code", "is_active")
-    search_fields = ("customer_name", "customer_email", "customer_mobile", "address_line_1", "address_line_2", "city", "postal_code")
-    list_filter = ("is_active", "city", "state_name", "created_at")
-    fieldsets = (
-        ("Customer", {"fields": ("customer_name", "customer_email", "customer_mobile", "label", "is_active")}),
-        ("Address", {"fields": ("address_line_1", "address_line_2", "landmark", "city", "state_name", "postal_code", "country")}),
-        ("Audit", {"fields": ("created_at", "updated_at")}),
-    )
-    readonly_fields = ("created_at", "updated_at")
+    list_display = ("customer_name", "customer_email", "customer_mobile", "label", "address_line", "is_active")
+    search_fields = ("customer_name", "customer_email", "customer_mobile", "address_line")
+    list_filter = ("is_active", "created_at")
 
 
 # -------------------------------------------------
