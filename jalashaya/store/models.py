@@ -184,3 +184,5 @@ class ContactMessage(TimeStampedModel):
 
     class Meta:
         ordering = ["-created_at"]
+
+
