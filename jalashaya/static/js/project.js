@@ -217,3 +217,161 @@ document.querySelectorAll('form').forEach(form => {
     if (btn) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…'; btn.style.pointerEvents = 'none'; }
   });
 });
+
+/* ── Booking modal ───────────────────────────────────────────── */
+const bookingModal = document.getElementById('bookingModal');
+if (bookingModal) {
+  const bookingForm = document.getElementById('bookingForm');
+  const summaryModal = document.getElementById('orderSummaryModal');
+  const summaryContent = document.getElementById('orderSummaryContent');
+  const confirmOrderSubmit = document.getElementById('confirmOrderSubmit');
+
+  const productIdInput = document.getElementById('bookingProductId');
+  const productNameLabel = document.getElementById('bookingProductName');
+  const quantityInput = document.getElementById('id_quantity');
+  const emailInput = document.getElementById('id_customer_email');
+  const addressSelect = document.getElementById('id_selected_address');
+  const hiddenDeliveryAddress = document.getElementById('id_delivery_address');
+  const savedAddressGroup = document.getElementById('savedAddressGroup');
+
+  const addrLine1 = document.getElementById('id_address_line_1');
+  const addrLine2 = document.getElementById('id_address_line_2');
+  const addrLandmark = document.getElementById('id_landmark');
+  const addrCity = document.getElementById('id_city');
+  const addrState = document.getElementById('id_state_name');
+  const addrPin = document.getElementById('id_postal_code');
+  const addrCountry = document.getElementById('id_country');
+
+  function composeAddressFromInputs() {
+    const parts = [
+      addrLine1?.value.trim(),
+      addrLine2?.value.trim(),
+      addrLandmark?.value.trim(),
+      addrCity?.value.trim(),
+      addrState?.value.trim(),
+      addrPin?.value.trim(),
+      addrCountry?.value.trim(),
+    ].filter(Boolean);
+    return parts.join(', ');
+  }
+
+  function syncHiddenDeliveryAddress() {
+    if (!hiddenDeliveryAddress) return;
+    const selected = addressSelect && addressSelect.selectedIndex > 0 ? addressSelect.options[addressSelect.selectedIndex] : null;
+    if (selected && selected.dataset.address) {
+      hiddenDeliveryAddress.value = selected.dataset.address;
+      return;
+    }
+    hiddenDeliveryAddress.value = composeAddressFromInputs();
+  }
+
+  function loadSavedAddresses() {
+    if (!emailInput || !addressSelect || !savedAddressGroup) return;
+    const email = emailInput.value.trim();
+    if (!email) {
+      savedAddressGroup.style.display = 'none';
+      return;
+    }
+
+    fetch(`/ajax/customer-addresses/?email=${encodeURIComponent(email)}`)
+      .then(res => res.json())
+      .then(data => {
+        addressSelect.innerHTML = '<option value="">Add New Address</option>';
+        if (data.results && data.results.length) {
+          data.results.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.textContent = `${item.label}: ${item.address}`;
+            option.dataset.address = item.address;
+            addressSelect.appendChild(option);
+          });
+          savedAddressGroup.style.display = 'block';
+        } else {
+          savedAddressGroup.style.display = 'none';
+        }
+        syncHiddenDeliveryAddress();
+      })
+      .catch(() => {
+        savedAddressGroup.style.display = 'none';
+      });
+  }
+
+  document.querySelectorAll('.booking-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (productIdInput) productIdInput.value = btn.dataset.productId || '';
+      if (productNameLabel) productNameLabel.textContent = btn.dataset.productName || 'Selected product';
+      if (bookingForm) bookingForm.dataset.productPrice = btn.dataset.productPrice || '0';
+      bookingModal.classList.add('is-open');
+      bookingModal.setAttribute('aria-hidden', 'false');
+      loadSavedAddresses();
+    });
+  });
+
+  if (emailInput) emailInput.addEventListener('blur', loadSavedAddresses);
+
+  [addrLine1, addrLine2, addrLandmark, addrCity, addrState, addrPin, addrCountry].forEach(el => {
+    if (el) el.addEventListener('input', syncHiddenDeliveryAddress);
+  });
+
+  if (addressSelect) {
+    addressSelect.addEventListener('change', syncHiddenDeliveryAddress);
+  }
+
+  bookingModal.querySelectorAll('[data-qty-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!quantityInput) return;
+      const current = parseInt(quantityInput.value || '1', 10);
+      quantityInput.value = String(btn.dataset.qtyAction === 'minus' ? Math.max(1, current - 1) : current + 1);
+    });
+  });
+
+  bookingModal.querySelectorAll('[data-close-booking]').forEach(el => {
+    el.addEventListener('click', () => {
+      bookingModal.classList.remove('is-open');
+      bookingModal.setAttribute('aria-hidden', 'true');
+    });
+  });
+
+  if (bookingForm && summaryModal && summaryContent && confirmOrderSubmit) {
+    bookingForm.addEventListener('submit', e => {
+      if (bookingForm.dataset.confirmed === 'true') return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      syncHiddenDeliveryAddress();
+
+      const quantity = parseInt(quantityInput?.value || '1', 10);
+      const price = parseFloat(bookingForm.dataset.productPrice || '0');
+      const subtotal = quantity * price;
+      const delivery = subtotal >= 200 ? 0 : 20;
+      const total = subtotal + delivery;
+
+      summaryContent.innerHTML = `
+        <div class="summary-row"><strong>Product:</strong><span>${productNameLabel?.textContent || '-'}</span></div>
+        <div class="summary-row"><strong>Customer:</strong><span>${document.getElementById('id_customer_name')?.value || '-'}</span></div>
+        <div class="summary-row"><strong>Email:</strong><span>${emailInput?.value || '-'}</span></div>
+        <div class="summary-row"><strong>Mobile:</strong><span>${document.getElementById('id_customer_mobile')?.value || '-'}</span></div>
+        <div class="summary-row"><strong>Quantity:</strong><span>${quantity}</span></div>
+        <div class="summary-row"><strong>Delivery Address:</strong><span>${hiddenDeliveryAddress?.value || '-'}</span></div>
+        <div class="summary-row"><strong>Subtotal:</strong><span>₹${subtotal.toFixed(2)}</span></div>
+        <div class="summary-row"><strong>Delivery Fee:</strong><span>₹${delivery.toFixed(2)}</span></div>
+        <div class="summary-row summary-total"><strong>Total:</strong><span>₹${total.toFixed(2)}</span></div>
+      `;
+      summaryModal.classList.add('is-open');
+      summaryModal.setAttribute('aria-hidden', 'false');
+    });
+
+    confirmOrderSubmit.addEventListener('click', () => {
+      bookingForm.dataset.confirmed = 'true';
+      summaryModal.classList.remove('is-open');
+      summaryModal.setAttribute('aria-hidden', 'true');
+      bookingForm.submit();
+    });
+
+    summaryModal.querySelectorAll('[data-close-summary]').forEach(el => {
+      el.addEventListener('click', () => {
+        summaryModal.classList.remove('is-open');
+        summaryModal.setAttribute('aria-hidden', 'true');
+      });
+    });
+  }
+}
