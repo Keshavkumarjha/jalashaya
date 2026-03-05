@@ -130,6 +130,38 @@ class OrderCreateForm(forms.ModelForm):
                 cleaned_data.get("country"),
             ]))
 
+        chosen_address = None
+        if selected_address:
+            if not str(selected_address).isdigit():
+                raise forms.ValidationError("Please select a valid saved address.")
+            try:
+                chosen_address = CustomerAddress.objects.get(
+                    id=int(selected_address),
+                    is_active=True,
+                    customer_email__iexact=customer_email,
+                )
+            except CustomerAddress.DoesNotExist as exc:
+                raise forms.ValidationError("Saved address not found.") from exc
+        else:
+            required_new_fields = ["address_line_1", "city", "state_name", "postal_code", "country"]
+            missing = [name for name in required_new_fields if not (cleaned_data.get(name) or "").strip()]
+            if missing:
+                raise forms.ValidationError("Please fill complete new address details.")
+
+        if chosen_address:
+            cleaned_data["resolved_delivery_address"] = chosen_address.full_address
+        else:
+            line_1 = (cleaned_data.get("address_line_1") or "").strip()
+            line_2 = (cleaned_data.get("address_line_2") or "").strip()
+            landmark = (cleaned_data.get("landmark") or "").strip()
+            city = (cleaned_data.get("city") or "").strip()
+            state_name = (cleaned_data.get("state_name") or "").strip()
+            postal_code = (cleaned_data.get("postal_code") or "").strip()
+            country = (cleaned_data.get("country") or "").strip()
+            cleaned_data["resolved_delivery_address"] = ", ".join(
+                [part for part in [line_1, line_2, landmark, city, state_name, postal_code, country] if part],
+            )
+
         cleaned_data["product"] = product
         cleaned_data["chosen_address"] = chosen_address
         cleaned_data["resolved_delivery_address"] = resolved_delivery_address

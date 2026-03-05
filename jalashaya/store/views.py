@@ -1,6 +1,11 @@
 from decimal import Decimal
+import json
+import logging
+from urllib import error as urllib_error
+from urllib import request as urllib_request
 
 from django.contrib import messages
+from django.conf import settings
 from django.db import transaction
 from django.db.models import F, Prefetch
 from django.http import JsonResponse
@@ -27,6 +32,55 @@ def _calc_totals(product: Product, qty: int) -> tuple[Decimal, Decimal, Decimal]
     delivery_fee = Decimal("0.00") if subtotal >= Decimal("200.00") else Decimal("20.00")
     total = (subtotal + delivery_fee).quantize(Decimal("0.01"))
     return subtotal, delivery_fee, total
+
+
+def _normalize_mobile_for_whatsapp(mobile: str | None) -> str | None:
+    digits = "".join(ch for ch in (mobile or "") if ch.isdigit())
+    if not digits:
+        return None
+    if len(digits) == 10:
+        return f"91{digits}"
+    return digits
+
+
+def _send_whatsapp_receipt(order):
+    token = getattr(settings, "WHATSAPP_ACCESS_TOKEN", "")
+    phone_number_id = getattr(settings, "WHATSAPP_PHONE_NUMBER_ID", "")
+    template_name = getattr(settings, "WHATSAPP_TEMPLATE_NAME", "hello_world")
+
+    if not token or not phone_number_id:
+        return
+
+    recipient = _normalize_mobile_for_whatsapp(order.customer_mobile)
+    if not recipient:
+        return
+
+    url = f"https://graph.facebook.com/v22.0/{phone_number_id}/messages"
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": recipient,
+        "type": "template",
+        "template": {
+            "name": template_name,
+            "language": {"code": "en_US"},
+        },
+    }
+
+    req = urllib_request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib_request.urlopen(req, timeout=10):  # noqa: S310
+            return
+    except (urllib_error.URLError, TimeoutError, ValueError) as exc:
+        logger.warning("WhatsApp receipt send failed for order %s: %s", order.id, exc)
 
 
 @require_GET
@@ -214,6 +268,31 @@ def customer_addresses(request):
         for addr in addresses
     ]
 
+    return JsonResponse({"results": data})
+
+
+@require_GET
+def customer_addresses(request):
+    customer_email = request.GET.get("email", "").strip()
+    if not customer_email:
+        return JsonResponse({"results": []})
+
+    addresses = CustomerAddress.objects.filter(customer_email__iexact=customer_email, is_active=True).order_by("-created_at")
+    data = [
+        {
+            "id": addr.id,
+            "label": addr.label or "Saved address",
+            "address": addr.full_address,
+            "address_line_1": addr.address_line_1,
+            "address_line_2": addr.address_line_2,
+            "landmark": addr.landmark,
+            "city": addr.city,
+            "state_name": addr.state_name,
+            "postal_code": addr.postal_code,
+            "country": addr.country,
+        }
+        for addr in addresses
+    ]
     return JsonResponse({"results": data})
 
 

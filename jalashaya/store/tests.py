@@ -1,5 +1,8 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 from django.urls import reverse
+from django.test.utils import override_settings
 
 from .models import Branch, Category, ContactMessage, CustomerAddress, Order, Product, State
 
